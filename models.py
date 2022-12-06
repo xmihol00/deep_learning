@@ -21,7 +21,7 @@ full_conv = tfm.Sequential([
     tfl.Reshape([10])                                                                               
 ])
 
-model_full_conv_max_pool = tfm.Sequential([
+full_conv_max_pool = tfm.Sequential([
     tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
     tfl.MaxPool2D(),
     tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
@@ -109,7 +109,7 @@ full_conv_batch_norm = tfm.Sequential([
     tfl.Reshape([10])                                                                               
 ])
 
-model_full_conv_max_pool_batch_norm = tfm.Sequential([
+full_conv_max_pool_batch_norm = tfm.Sequential([
     tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
     tfl.BatchNormalization(),
     tfl.MaxPool2D(),

@@ -27,11 +27,11 @@ full_conv.save_weights("./models/full_conv/full_conv")
 del full_conv
 
 
-model_full_conv_max_pool.compile(optimizer="adam", loss="categorical_crossentropy")
-model_full_conv_max_pool.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
+full_conv_max_pool.compile(optimizer="adam", loss="categorical_crossentropy")
+full_conv_max_pool.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
                              callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-model_full_conv_max_pool.save_weights("./models/model_full_conv_max_pool/model_full_conv_max_pool")
-del model_full_conv_max_pool
+full_conv_max_pool.save_weights("./models/full_conv_max_pool/full_conv_max_pool")
+del full_conv_max_pool
 
 
 VGG_inspired_less_kernels.compile(optimizer="adam", loss="categorical_crossentropy")

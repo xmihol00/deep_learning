@@ -27,11 +27,11 @@ print(f"full_conv_batch_norm_accuracy:                  {full_conv_batch_norm_ac
 del full_conv_batch_norm
 
 
-model_full_conv_max_pool_batch_norm.load_weights("./models/model_full_conv_max_pool/model_full_conv_max_pool_batch_norm").expect_partial()
-model_full_conv_max_pool_batch_norm_pred = model_full_conv_max_pool_batch_norm.predict(x_test)
-model_full_conv_max_pool_batch_norm_accuracy = (np.argmax(model_full_conv_max_pool_batch_norm_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"model_full_conv_max_pool_batch_norm_accuracy:   {model_full_conv_max_pool_batch_norm_accuracy * 100:.2f} %")
-del model_full_conv_max_pool_batch_norm
+full_conv_max_pool_batch_norm.load_weights("./models/full_conv_max_pool/full_conv_max_pool_batch_norm").expect_partial()
+full_conv_max_pool_batch_norm_pred = full_conv_max_pool_batch_norm.predict(x_test)
+full_conv_max_pool_batch_norm_accuracy = (np.argmax(full_conv_max_pool_batch_norm_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+print(f"full_conv_max_pool_batch_norm_accuracy:   {full_conv_max_pool_batch_norm_accuracy * 100:.2f} %")
+del full_conv_max_pool_batch_norm
 
 
 VGG_inspired_less_kernels_droput_05.load_weights("./models/VGG_inspired_less_kernels/VGG_inspired_less_kernels_droput_05").expect_partial()
