@@ -23,33 +23,33 @@ x_train.shape, y_train.shape, x_test.shape, y_test.shape
 full_conv.compile(optimizer="adam", loss="categorical_crossentropy")
 full_conv.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
               callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-full_conv.save_weights("./models/full_conv")
+full_conv.save_weights("./models/full_conv/full_conv")
 del full_conv
 
 
 model_full_conv_max_pool.compile(optimizer="adam", loss="categorical_crossentropy")
 model_full_conv_max_pool.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
                              callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-model_full_conv_max_pool.save_weights("./models/model_full_conv_max_pool")
+model_full_conv_max_pool.save_weights("./models/model_full_conv_max_pool/model_full_conv_max_pool")
 del model_full_conv_max_pool
 
 
 VGG_inspired_less_kernels.compile(optimizer="adam", loss="categorical_crossentropy")
 VGG_inspired_less_kernels.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
                           callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-VGG_inspired_less_kernels.save_weights("./models/VGG_inspired_less_kernels")
+VGG_inspired_less_kernels.save_weights("./models/VGG_inspired_less_kernels/VGG_inspired_less_kernels")
 del VGG_inspired_less_kernels
 
 
 VGG_inspired_more_kernels.compile(optimizer="adam", loss="categorical_crossentropy")
 VGG_inspired_more_kernels.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
                           callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-VGG_inspired_more_kernels.save_weights("./models/VGG_inspired_more_kernels")
+VGG_inspired_more_kernels.save_weights("./models/VGG_inspired_more_kernels/VGG_inspired_more_kernels")
 del VGG_inspired_more_kernels
 
 
 VGG_inspired_3_dense_layers.compile(optimizer="adam", loss="categorical_crossentropy")
 VGG_inspired_3_dense_layers.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
                                 callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-VGG_inspired_3_dense_layers.save_weights("./models/VGG_inspired_3_dense_layers")
+VGG_inspired_3_dense_layers.save_weights("./models/VGG_inspired_3_dense_layers/VGG_inspired_3_dense_layers")
 del VGG_inspired_3_dense_layers

@@ -20,35 +20,35 @@ y_test = np.array(y_test).reshape(len(y_test))
 x_train.shape, y_train.shape, x_test.shape, y_test.shape
 
 
-full_conv.load_weights("./models/full_conv")
+full_conv.load_weights("./models/full_conv/full_conv").expect_partial()
 full_conv_pred = full_conv.predict(x_test)
 full_conv_accuracy = (np.argmax(full_conv_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
 print(f"full_conv_accuracy:                   {full_conv_accuracy * 100:.2f} %")
 del full_conv
 
 
-model_full_conv_max_pool.load_weights("./models/model_full_conv_max_pool")
+model_full_conv_max_pool.load_weights("./models/model_full_conv_max_pool/model_full_conv_max_pool").expect_partial()
 model_full_conv_max_pool_pred = model_full_conv_max_pool.predict(x_test)
 model_full_conv_max_pool_accuracy = (np.argmax(model_full_conv_max_pool_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
 print(f"model_full_conv_max_pool_accuracy:    {model_full_conv_max_pool_accuracy * 100:.2f} %")
 del model_full_conv_max_pool
 
 
-VGG_inspired_less_kernels.load_weights("./models/VGG_inspired_less_kernels")
+VGG_inspired_less_kernels.load_weights("./models/VGG_inspired_less_kernels/VGG_inspired_less_kernels").expect_partial()
 VGG_inspired_less_kernels_pred = VGG_inspired_less_kernels.predict(x_test)
 VGG_inspired_less_kernels_accuracy = (np.argmax(VGG_inspired_less_kernels_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_inspired_less_kernels_accuracy:       {VGG_inspired_less_kernels_accuracy * 100:.2f} %")
+print(f"VGG_inspired_less_kernels_accuracy:   {VGG_inspired_less_kernels_accuracy * 100:.2f} %")
 del VGG_inspired_less_kernels
 
 
-VGG_inspired_more_kernels.load_weights("./models/VGG_inspired_more_kernels")
+VGG_inspired_more_kernels.load_weights("./models/VGG_inspired_more_kernels/VGG_inspired_more_kernels").expect_partial()
 VGG_inspired_more_kernels_pred = VGG_inspired_more_kernels.predict(x_test)
 VGG_inspired_more_kernels_accuracy = (np.argmax(VGG_inspired_more_kernels_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_inspired_more_kernels_accuracy:       {VGG_inspired_more_kernels_accuracy * 100:.2f} %")
+print(f"VGG_inspired_more_kernels_accuracy:   {VGG_inspired_more_kernels_accuracy * 100:.2f} %")
 del VGG_inspired_more_kernels
 
 
-VGG_inspired_3_dense_layers.load_weights("./models/VGG_inspired_3_dense_layers")
+VGG_inspired_3_dense_layers.load_weights("./models/VGG_inspired_3_dense_layers/VGG_inspired_3_dense_layers").expect_partial()
 VGG_inspired_3_dense_layers_pred = VGG_inspired_3_dense_layers.predict(x_test)
 VGG_inspired_3_dense_layers_accuracy = (np.argmax(VGG_inspired_3_dense_layers_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
 print(f"VGG_inspired_3_dense_layers_accuracy: {VGG_inspired_3_dense_layers_accuracy * 100:.2f} %")
