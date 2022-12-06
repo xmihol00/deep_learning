@@ -200,3 +200,80 @@ VGG_inspired_3_dense_layers_droput_05 = tfm.Sequential([
     tfl.Dropout(0.5),
     tfl.Dense(10, activation="softmax")
 ])
+
+
+full_conv_l1_reg = tfm.Sequential([
+    tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+    tfl.Reshape([10])                                                                               
+])
+
+full_conv_max_pool_l1_reg = tfm.Sequential([
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+    tfl.Reshape([10])
+])
+
+VGG_inspired_less_kernels_l1_reg = tfm.Sequential([
+    tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Flatten(),
+    tfl.Dense(128, activation="relu", kernel_regularizer="l1"),
+    tfl.Dense(10, activation="softmax")
+])
+
+VGG_inspired_more_kernels_l1_reg = tfm.Sequential([
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Flatten(),
+    tfl.Dense(256, activation="relu", kernel_regularizer="l1"),
+    tfl.Dense(10, activation="softmax")
+])
+
+VGG_inspired_3_dense_layers_l1_reg = tfm.Sequential([
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.MaxPool2D(),
+    tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer="l1"),
+    tfl.Flatten(),
+    tfl.Dense(512, activation="relu", kernel_regularizer="l1"),
+    tfl.Dense(128, activation="relu", kernel_regularizer="l1"),
+    tfl.Dense(10, activation="softmax")
+])
