@@ -27,11 +27,11 @@ full_conv_batch_norm.save_weights("./models/full_conv/full_conv_batch_norm")
 del full_conv_batch_norm
 
 
-model_full_conv_max_pool_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy")
-model_full_conv_max_pool_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
+full_conv_max_pool_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy")
+full_conv_max_pool_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
                              callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-model_full_conv_max_pool_batch_norm.save_weights("./models/model_full_conv_max_pool/model_full_conv_max_pool_batch_norm")
-del model_full_conv_max_pool_batch_norm
+full_conv_max_pool_batch_norm.save_weights("./models/full_conv_max_pool/full_conv_max_pool_batch_norm")
+del full_conv_max_pool_batch_norm
 
 
 VGG_inspired_less_kernels_droput_05.compile(optimizer="adam", loss="categorical_crossentropy")
