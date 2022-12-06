@@ -23,8 +23,8 @@ x_train.shape, y_train.shape, x_test.shape, y_test.shape
 full_conv_batch_norm.load_weights("./models/full_conv/full_conv_batch_norm").expect_partial()
 full_conv_batch_norm_pred = full_conv_batch_norm.predict(x_test)
 full_conv_batch_norm_accuracy = (np.argmax(full_conv_batch_norm_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"full_conv_accuracy:                             {full_conv_batch_norm_accuracy * 100:.2f} %")
-del full_conv
+print(f"full_conv_batch_norm_accuracy:                  {full_conv_batch_norm_accuracy * 100:.2f} %")
+del full_conv_batch_norm
 
 
 model_full_conv_max_pool_batch_norm.load_weights("./models/model_full_conv_max_pool/model_full_conv_max_pool_batch_norm").expect_partial()
@@ -52,4 +52,4 @@ VGG_inspired_3_dense_layers_droput_05.load_weights("./models/VGG_inspired_3_dens
 VGG_inspired_3_dense_layers_droput_05_pred = VGG_inspired_3_dense_layers_droput_05.predict(x_test)
 VGG_inspired_3_dense_layers_droput_05_accuracy = (np.argmax(VGG_inspired_3_dense_layers_droput_05_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
 print(f"VGG_inspired_3_dense_layers_droput_05_accuracy: {VGG_inspired_3_dense_layers_droput_05_accuracy * 100:.2f} %")
-#del VGG_inspired_3_dense_layers_droput_05
+del VGG_inspired_3_dense_layers_droput_05
