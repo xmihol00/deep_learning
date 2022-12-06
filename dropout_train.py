@@ -5,7 +5,12 @@ import tensorflow.keras.layers as tfl
 import tensorflow.keras.callbacks as tfc
 import tensorflow as tf
 import numpy as np
+import random
 from models import *
+
+tf.random.set_seed(42)
+np.random.seed(42)
+random.seed(42)
 
 (x_train, y_train), (x_test, y_test) = tfd.cifar10.load_data()
 x_train, x_test = np.mean(x_train, axis=3), np.mean(x_test, axis=3) # convert to grayscale
@@ -21,35 +26,35 @@ x_train.shape, y_train.shape, x_test.shape, y_test.shape
 
 
 full_conv_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-full_conv_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
+full_conv_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
               callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
 full_conv_batch_norm.save_weights("./models/full_conv/full_conv_batch_norm")
 del full_conv_batch_norm
 
 
 full_conv_max_pool_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-full_conv_max_pool_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
+full_conv_max_pool_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                              callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
 full_conv_max_pool_batch_norm.save_weights("./models/full_conv_max_pool/full_conv_max_pool_batch_norm")
 del full_conv_max_pool_batch_norm
 
 
 VGG_inspired_less_kernels_droput_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-VGG_inspired_less_kernels_droput_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
+VGG_inspired_less_kernels_droput_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                           callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
 VGG_inspired_less_kernels_droput_05.save_weights("./models/VGG_inspired_less_kernels/VGG_inspired_less_kernels_droput_05")
 del VGG_inspired_less_kernels_droput_05
 
 
 VGG_inspired_more_kernels_droput_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-VGG_inspired_more_kernels_droput_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
+VGG_inspired_more_kernels_droput_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                           callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
 VGG_inspired_more_kernels_droput_05.save_weights("./models/VGG_inspired_more_kernels/VGG_inspired_more_kernels_droput_05")
 del VGG_inspired_more_kernels_droput_05
 
 
 VGG_inspired_3_dense_layers_droput_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-VGG_inspired_3_dense_layers_droput_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32,
+VGG_inspired_3_dense_layers_droput_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                                 callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
 VGG_inspired_3_dense_layers_droput_05.save_weights("./models/VGG_inspired_3_dense_layers/VGG_inspired_3_dense_layers_droput_05")
 del VGG_inspired_3_dense_layers_droput_05
