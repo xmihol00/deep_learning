@@ -20,36 +20,36 @@ y_test = np.array(y_test).reshape(len(y_test))
 x_train.shape, y_train.shape, x_test.shape, y_test.shape
 
 
-full_conv.load_weights("./models/full_conv/full_conv").expect_partial()
-full_conv_pred = full_conv.predict(x_test)
-full_conv_accuracy = (np.argmax(full_conv_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"full_conv_accuracy:                   {full_conv_accuracy * 100:.2f} %")
-del full_conv
+FC_SP_16_256.load_weights("./models/FC_SP_16_256/FC_SP_16_256").expect_partial()
+FC_SP_16_256_pred = FC_SP_16_256.predict(x_test)
+FC_SP_16_256_accuracy = (np.argmax(FC_SP_16_256_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+print(f"FC_SP_16_256 accuracy:                   {FC_SP_16_256_accuracy * 100:.2f} %")
+del FC_SP_16_256
 
 
-full_conv_max_pool.load_weights("./models/full_conv_max_pool/full_conv_max_pool").expect_partial()
-full_conv_max_pool_pred = full_conv_max_pool.predict(x_test)
-full_conv_max_pool_accuracy = (np.argmax(full_conv_max_pool_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"full_conv_max_pool_accuracy:    {full_conv_max_pool_accuracy * 100:.2f} %")
-del full_conv_max_pool
+FC_MP_32_512.load_weights("./models/FC_MP_32_512/FC_MP_32_512").expect_partial()
+FC_MP_32_512_pred = FC_MP_32_512.predict(x_test)
+FC_MP_32_512_accuracy = (np.argmax(FC_MP_32_512_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+print(f"FC_MP_32_512 accuracy:    {FC_MP_32_512_accuracy * 100:.2f} %")
+del FC_MP_32_512
 
 
-VGG_inspired_less_kernels.load_weights("./models/VGG_inspired_less_kernels/VGG_inspired_less_kernels").expect_partial()
-VGG_inspired_less_kernels_pred = VGG_inspired_less_kernels.predict(x_test)
-VGG_inspired_less_kernels_accuracy = (np.argmax(VGG_inspired_less_kernels_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_inspired_less_kernels_accuracy:   {VGG_inspired_less_kernels_accuracy * 100:.2f} %")
-del VGG_inspired_less_kernels
+VGG_2B_32_64.load_weights("./models/VGG_2B_32_64/VGG_2B_32_64").expect_partial()
+VGG_2B_32_64_pred = VGG_2B_32_64.predict(x_test)
+VGG_2B_32_64_accuracy = (np.argmax(VGG_2B_32_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+print(f"VGG_2B_32_64 accuracy: {VGG_2B_32_64_accuracy * 100:.2f} %")
+del VGG_2B_32_64
 
 
-VGG_inspired_more_kernels.load_weights("./models/VGG_inspired_more_kernels/VGG_inspired_more_kernels").expect_partial()
-VGG_inspired_more_kernels_pred = VGG_inspired_more_kernels.predict(x_test)
-VGG_inspired_more_kernels_accuracy = (np.argmax(VGG_inspired_more_kernels_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_inspired_more_kernels_accuracy:   {VGG_inspired_more_kernels_accuracy * 100:.2f} %")
-del VGG_inspired_more_kernels
+VGG_3B_16_64.load_weights("./models/VGG_3B_16_64/VGG_3B_16_64").expect_partial()
+VGG_3B_16_64_pred = VGG_3B_16_64.predict(x_test)
+VGG_3B_16_64_accuracy = (np.argmax(VGG_3B_16_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+print(f"VGG_3B_16_64 accuracy:   {VGG_3B_16_64_accuracy * 100:.2f} %")
+del VGG_3B_16_64
 
 
-VGG_inspired_3_dense_layers.load_weights("./models/VGG_inspired_3_dense_layers/VGG_inspired_3_dense_layers").expect_partial()
-VGG_inspired_3_dense_layers_pred = VGG_inspired_3_dense_layers.predict(x_test)
-VGG_inspired_3_dense_layers_accuracy = (np.argmax(VGG_inspired_3_dense_layers_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_inspired_3_dense_layers_accuracy: {VGG_inspired_3_dense_layers_accuracy * 100:.2f} %")
-del VGG_inspired_3_dense_layers
+VGG_3B_32_128.load_weights("./models/VGG_3B_32_128/VGG_3B_32_128").expect_partial()
+VGG_3B_32_128_pred = VGG_3B_32_128.predict(x_test)
+VGG_3B_32_128_accuracy = (np.argmax(VGG_3B_32_128_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+print(f"VGG_3B_32_128 accuracy:   {VGG_3B_32_128_accuracy * 100:.2f} %")
+del VGG_3B_32_128

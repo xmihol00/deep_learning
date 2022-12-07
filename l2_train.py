@@ -25,36 +25,43 @@ y_test = np.array(y_test).reshape(len(y_test))
 x_train.shape, y_train.shape, x_test.shape, y_test.shape
 
 
-full_conv_l2_reg.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-full_conv_l2_reg.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
+FC_SP_16_256_l2_00001.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+FC_SP_16_256_l2_00001.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
               callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-full_conv_l2_reg.save_weights("./models/full_conv/full_conv_l2_reg")
-del full_conv_l2_reg
+FC_SP_16_256_l2_00001.save_weights("./models/FC_SP_16_256/FC_SP_16_256_l2_00001")
+del FC_SP_16_256_l2_00001
 
 
-full_conv_max_pool_l2_reg.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-full_conv_max_pool_l2_reg.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
+FC_MP_16_256_l2_00001.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+FC_MP_16_256_l2_00001.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                              callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-full_conv_max_pool_l2_reg.save_weights("./models/full_conv_max_pool/full_conv_max_pool_l2_reg")
-del full_conv_max_pool_l2_reg
+FC_MP_16_256_l2_00001.save_weights("./models/FC_MP_16_256/FC_MP_16_256_l2_00001")
+del FC_MP_16_256_l2_00001
 
 
-VGG_inspired_less_kernels_l2_reg.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-VGG_inspired_less_kernels_l2_reg.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
+FC_MP_32_512_l2_00001.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+FC_MP_32_512_l2_00001.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
+                             callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
+FC_MP_32_512_l2_00001.save_weights("./models/FC_MP_32_512/FC_MP_32_512_l2_00001")
+del FC_MP_32_512_l2_00001
+
+
+VGG_2B_32_64_l2_00001.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+VGG_2B_32_64_l2_00001.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                           callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-VGG_inspired_less_kernels_l2_reg.save_weights("./models/VGG_inspired_less_kernels/VGG_inspired_less_kernels_l2_reg")
-del VGG_inspired_less_kernels_l2_reg
+VGG_2B_32_64_l2_00001.save_weights("./models/VGG_2B_32_64/VGG_2B_32_64_l2_00001")
+del VGG_2B_32_64_l2_00001
 
 
-VGG_inspired_more_kernels_l2_reg.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-VGG_inspired_more_kernels_l2_reg.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
+VGG_3B_16_64_l2_00001.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+VGG_3B_16_64_l2_00001.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                           callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-VGG_inspired_more_kernels_l2_reg.save_weights("./models/VGG_inspired_more_kernels/VGG_inspired_more_kernels_l2_reg")
-del VGG_inspired_more_kernels_l2_reg
+VGG_3B_16_64_l2_00001.save_weights("./models/VGG_3B_16_64/VGG_3B_16_64_l2_00001")
+del VGG_3B_16_64_l2_00001
 
 
-VGG_inspired_3_dense_layers_l2_reg.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-VGG_inspired_3_dense_layers_l2_reg.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
+VGG_3B_32_128_l2_00001.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+VGG_3B_32_128_l2_00001.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                                 callbacks=[tfc.EarlyStopping(monitor="val_loss", patience=3, mode="min", restore_best_weights=True)])
-VGG_inspired_3_dense_layers_l2_reg.save_weights("./models/VGG_inspired_3_dense_layers/VGG_inspired_3_dense_layers_l2_reg")
-del VGG_inspired_3_dense_layers_l2_reg
+VGG_3B_32_128_l2_00001.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_l2_00001")
+del VGG_3B_32_128_l2_00001
