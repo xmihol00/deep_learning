@@ -23,33 +23,40 @@ x_train.shape, y_train.shape, x_test.shape, y_test.shape
 FC_SP_16_256.load_weights("./models/FC_SP_16_256/FC_SP_16_256").expect_partial()
 FC_SP_16_256_pred = FC_SP_16_256.predict(x_test)
 FC_SP_16_256_accuracy = (np.argmax(FC_SP_16_256_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"FC_SP_16_256 accuracy:                   {FC_SP_16_256_accuracy * 100:.2f} %")
+print(f"FC_SP_16_256 accuracy:  {FC_SP_16_256_accuracy * 100:.2f} %")
 del FC_SP_16_256
+
+
+FC_MP_16_256.load_weights("./models/FC_MP_16_256/FC_MP_16_256").expect_partial()
+FC_MP_16_256_pred = FC_MP_16_256.predict(x_test)
+FC_MP_16_256_accuracy = (np.argmax(FC_MP_16_256_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+print(f"FC_MP_16_256 accuracy:  {FC_MP_16_256_accuracy * 100:.2f} %")
+del FC_MP_16_256
 
 
 FC_MP_32_512.load_weights("./models/FC_MP_32_512/FC_MP_32_512").expect_partial()
 FC_MP_32_512_pred = FC_MP_32_512.predict(x_test)
 FC_MP_32_512_accuracy = (np.argmax(FC_MP_32_512_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"FC_MP_32_512 accuracy:    {FC_MP_32_512_accuracy * 100:.2f} %")
+print(f"FC_MP_32_512 accuracy:  {FC_MP_32_512_accuracy * 100:.2f} %")
 del FC_MP_32_512
 
 
 VGG_2B_32_64.load_weights("./models/VGG_2B_32_64/VGG_2B_32_64").expect_partial()
 VGG_2B_32_64_pred = VGG_2B_32_64.predict(x_test)
 VGG_2B_32_64_accuracy = (np.argmax(VGG_2B_32_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_2B_32_64 accuracy: {VGG_2B_32_64_accuracy * 100:.2f} %")
+print(f"VGG_2B_32_64 accuracy:  {VGG_2B_32_64_accuracy * 100:.2f} %")
 del VGG_2B_32_64
 
 
 VGG_3B_16_64.load_weights("./models/VGG_3B_16_64/VGG_3B_16_64").expect_partial()
 VGG_3B_16_64_pred = VGG_3B_16_64.predict(x_test)
 VGG_3B_16_64_accuracy = (np.argmax(VGG_3B_16_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_3B_16_64 accuracy:   {VGG_3B_16_64_accuracy * 100:.2f} %")
+print(f"VGG_3B_16_64 accuracy:  {VGG_3B_16_64_accuracy * 100:.2f} %")
 del VGG_3B_16_64
 
 
 VGG_3B_32_128.load_weights("./models/VGG_3B_32_128/VGG_3B_32_128").expect_partial()
 VGG_3B_32_128_pred = VGG_3B_32_128.predict(x_test)
 VGG_3B_32_128_accuracy = (np.argmax(VGG_3B_32_128_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
-print(f"VGG_3B_32_128 accuracy:   {VGG_3B_32_128_accuracy * 100:.2f} %")
+print(f"VGG_3B_32_128 accuracy: {VGG_3B_32_128_accuracy * 100:.2f} %")
 del VGG_3B_32_128
