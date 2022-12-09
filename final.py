@@ -1725,15 +1725,15 @@ class PlotCallback(tfc.Callback):
         plt.plot(self.loss_values)
         plt.title("title")
         plt.ylabel("loss")
-        plt.xlabel("epoch")
+        plt.xlabel("batch")
         
         if self.validation:
-            plt.legend(["training", "validation"], loc="upper right")
             plt.plot(np.linspace(0, len(self.loss_values), len(self.val_loss_values)), self.val_loss_values)
+            plt.legend(["training", "validation"], loc="upper right")
         else:
             plt.legend(["training"], loc="upper right")
 
-        plt.show()
+        plt.savefig("final_model_training_with_validation.png" if self.validation else "final_model_training.png")
 
 class FinalModel():
     def __init__(self):
@@ -1794,5 +1794,5 @@ if __name__ == "__main__":
     y_test = np.array(y_test).reshape(len(y_test))
 
     final_model = FinalModel()
-    final_model.train_with_validation(x_train, y_train, 5)
+    final_model.train_with_validation(x_train, y_train, 16)
     #final_model.train(x_train, y_train, 1)
