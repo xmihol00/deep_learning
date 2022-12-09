@@ -1724,17 +1724,21 @@ class PlotCallback(tfc.Callback):
     def plot(self):
         plt.figure(figsize=(10, 5))
         plt.plot(self.loss_values)
-        plt.title("title")
+        plt.title("Training and validation loss" if self.validation else "Training loss")
         plt.ylabel("loss")
         plt.xlabel("batch")
         
+        filename = ""
         if self.validation:
             plt.plot(np.linspace(0, len(self.loss_values), len(self.val_loss_values)), self.val_loss_values)
             plt.legend(["training", "validation"], loc="upper right")
+            filename = "final_model_training_with_validation.png"
         else:
-            plt.legend(["training"], loc="upper right")
+            filename = "final_model_training.png"
 
-        plt.savefig("final_model_training_with_validation.png" if self.validation else "final_model_training.png")
+        plt.savefig(filename)
+        plt.show()
+        plt.close()
 
 class FinalModel():
     def __init__(self):
@@ -1762,7 +1766,7 @@ class FinalModel():
         ])
 
         self.val_plot_callback = PlotCallback(True)
-        self.plot_callback = PlotCallback(True)
+        self.plot_callback = PlotCallback(False)
     
     def train(self, x_train, y_train, epochs):
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
@@ -1779,18 +1783,33 @@ class FinalModel():
         self.val_plot_callback.plot()
     
     def evaluate(self, x_test, y_test, validation=False):
-        if validation:
-            self.model.load_weights("./models/final/val_model").expect_partial()
-        else:
-            self.model.load_weights("./models/final/model").expect_partial()
-
+        self.model.load_weights("./models/final/model").expect_partial()
         predictions = self.model.predict(x_test)
-        predictions = (np.argmax(predictions, axis=1) == y_test).sum()
-        accuracy = predictions / y_test.shape[0]
+        predictions = np.argmax(predictions, axis=1)        
+        accuracy = (predictions == y_test).sum() / y_test.shape[0]
         print(f"final model accuracy:  {accuracy * 100:.2f} %")
 
-        skm.plot_confusion_matrix(estimator=self.model, X=x_test, y_true=y_test, cmap="Blues", normalize="true", 
-                                  ax=plt.subplots(figsize=(12, 12))[1])
+        confusion_matrix = tf.math.confusion_matrix(y_test, predictions).numpy()
+        confusion_matrix = skm.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=["airplane", 
+                                                                                                         "automobile", 
+                                                                                                         "bird", 
+                                                                                                         "cat", 
+                                                                                                         "deer", 
+                                                                                                         "dog", 
+                                                                                                         "frog", 
+                                                                                                         "horse", 
+                                                                                                         "ship", 
+                                                                                                         "truck"])
+        confusion_matrix.plot(cmap="Blues", ax=plt.subplots(figsize=(12, 12))[1])
+        plt.savefig("confusion_matrix.png")
+        plt.show()
+    
+    def evaluate_with_validation(self, x_test, y_test):
+        self.model.load_weights("./models/final/val_model").expect_partial()
+        predictions = self.model.predict(x_test)
+        predictions = np.argmax(predictions, axis=1)        
+        accuracy = (predictions == y_test).sum() / y_test.shape[0]
+        print(f"final model accuracy trained with validation data set:  {accuracy * 100:.2f} %")
 
 if __name__ == "__main__":
     tf.random.set_seed(42)
@@ -1809,7 +1828,9 @@ if __name__ == "__main__":
     y_test = np.array(y_test).reshape(-1)
 
     final_model = FinalModel()
-    #final_model.train_with_validation(x_train, y_train, 16)
-    #final_model.train(x_train, y_train, 16)
-    final_model.evaluate()
+    final_model.train_with_validation(x_train, y_train, 16)
+    final_model.evaluate_with_validation(x_test, y_test)
+    final_model = FinalModel()
+    final_model.train(x_train, y_train, 16)
+    final_model.evaluate(x_test, y_test)
 
