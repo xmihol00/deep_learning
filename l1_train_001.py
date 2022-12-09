@@ -22,7 +22,7 @@ NUM_OF_TEST_SAMPLES = len(y_test)
 
 y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
 y_test = np.array(y_test).reshape(len(y_test))
-x_train.shape, y_train.shape, x_test.shape, y_test.shape
+
 
 
 FC_SP_16_256_l1_001.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])

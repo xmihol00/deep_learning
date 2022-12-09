@@ -17,7 +17,7 @@ NUM_OF_TEST_SAMPLES = len(y_test)
 
 y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
 y_test = np.array(y_test).reshape(len(y_test))
-x_train.shape, y_train.shape, x_test.shape, y_test.shape
+
 
 
 VGG_2B_32_64_dropout_03.load_weights("./models/VGG_2B_32_64/VGG_2B_32_64_dropout_03").expect_partial()

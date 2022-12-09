@@ -3,6 +3,7 @@ import tensorflow.keras.utils as tfu
 import tensorflow.keras.models as tfm
 import tensorflow.keras.layers as tfl
 import tensorflow.keras.callbacks as tfc
+import tensorflow.keras.optimizers as tfo
 import tensorflow as tf
 import numpy as np
 import random
@@ -24,45 +25,44 @@ y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
 y_test = np.array(y_test).reshape(len(y_test))
 
 
-
-FC_SP_16_256_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+FC_SP_16_256_batch_norm.compile(optimizer=tfo.Adam(tfo.schedules.ExponentialDecay(0.01, 500, 0.9)), loss="categorical_crossentropy", metrics=["accuracy"])
 FC_SP_16_256_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
               callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-FC_SP_16_256_batch_norm.save_weights("./models/FC_SP_16_256/FC_SP_16_256_batch_norm")
+FC_SP_16_256_batch_norm.save_weights("./models/FC_SP_16_256/FC_SP_16_256_exp_decay")
 del FC_SP_16_256_batch_norm
 
 
-FC_MP_16_256_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+FC_MP_16_256_batch_norm.compile(optimizer=tfo.Adam(tfo.schedules.ExponentialDecay(0.01, 500, 0.9)), loss="categorical_crossentropy", metrics=["accuracy"])
 FC_MP_16_256_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
               callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-FC_MP_16_256_batch_norm.save_weights("./models/FC_MP_16_256/FC_MP_16_256_batch_norm")
+FC_MP_16_256_batch_norm.save_weights("./models/FC_MP_16_256/FC_MP_16_256_exp_decay")
 del FC_MP_16_256_batch_norm
 
 
-FC_MP_32_512_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+FC_MP_32_512_batch_norm.compile(optimizer=tfo.Adam(tfo.schedules.ExponentialDecay(0.01, 500, 0.9)), loss="categorical_crossentropy", metrics=["accuracy"])
 FC_MP_32_512_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                              callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-FC_MP_32_512_batch_norm.save_weights("./models/FC_MP_32_512/FC_MP_32_512_batch_norm")
+FC_MP_32_512_batch_norm.save_weights("./models/FC_MP_32_512/FC_MP_32_512_exp_decay")
 del FC_MP_32_512_batch_norm
 
 
-VGG_2B_32_64_dropout_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+VGG_2B_32_64_dropout_05.compile(optimizer=tfo.Adam(tfo.schedules.ExponentialDecay(0.01, 500, 0.9)), loss="categorical_crossentropy", metrics=["accuracy"])
 VGG_2B_32_64_dropout_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                           callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-VGG_2B_32_64_dropout_05.save_weights("./models/VGG_2B_32_64/VGG_2B_32_64_dropout_05")
+VGG_2B_32_64_dropout_05.save_weights("./models/VGG_2B_32_64/VGG_2B_32_64_exp_decay")
 del VGG_2B_32_64_dropout_05
 
 
-VGG_3B_16_64_dropout_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+VGG_3B_16_64_dropout_05.compile(optimizer=tfo.Adam(tfo.schedules.ExponentialDecay(0.01, 500, 0.9)), loss="categorical_crossentropy", metrics=["accuracy"])
 VGG_3B_16_64_dropout_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                           callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-VGG_3B_16_64_dropout_05.save_weights("./models/VGG_3B_16_64/VGG_3B_16_64_dropout_05")
+VGG_3B_16_64_dropout_05.save_weights("./models/VGG_3B_16_64/VGG_3B_16_64_exp_decay")
 del VGG_3B_16_64_dropout_05
 
 
-VGG_3B_32_128_dropout_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+VGG_3B_32_128_dropout_05.compile(optimizer=tfo.Adam(tfo.schedules.ExponentialDecay(0.01, 500, 0.9)), loss="categorical_crossentropy", metrics=["accuracy"])
 VGG_3B_32_128_dropout_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                           callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-VGG_3B_32_128_dropout_05.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_dropout_05")
+VGG_3B_32_128_dropout_05.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_exp_decay")
 del VGG_3B_32_128_dropout_05
 

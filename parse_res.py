@@ -26,9 +26,14 @@ for model_res in models:
     while len(model_res) < max_len:
         model_res.append("-----")
 
-model_names = ["FC -- SP\\\\16-256", "FC -- MP\\\\16-256", "FC -- MP\\\\32-512", "VGG -- 2 B\\\\32-64", "VGG -- 3 B\\\\16-64", "VGG -- 3 B\\\\32-128"]
+model_names = ["FC -- SP\\\\16-256\\\\10", 
+               "FC -- MP\\\\16-256\\\\128, 10", 
+               "FC -- MP\\\\32-512\\\\256, 10", 
+               "VGG -- 2 B\\\\32-64\\\\256, 128, 10", 
+               "VGG -- 3 B\\\\16-64\\\\128, 10", 
+               "VGG -- 3 B\\\\32-128\\\\256, 10"]
 
-print("\\begin{center}", "\\begin{tabular}{ |c|c|c|c|c|c| }", sep="\n")
+print("\\begin{center}", "\\begin{tabular}{ |c|c|c|c|c|c|c| }", sep="\n")
 
 row_end = "\\\\\n"
 percent = "\\%"

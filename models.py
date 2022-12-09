@@ -1189,3 +1189,24 @@ VGG_3B_32_128_l1l2_001 = tfm.Sequential([
     tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
     tfl.Dense(10, activation="softmax")
 ])
+
+FC_SP_16_256.build([32, 32, 32, 1])
+FC_SP_16_256.summary()
+
+FC_MP_16_256.build([32, 32, 32, 1])
+FC_MP_16_256.summary()
+
+FC_MP_32_512.build([32, 32, 32, 1])
+FC_MP_32_512.summary()
+
+VGG_2B_32_64.build([32, 32, 32, 1])
+VGG_2B_32_64.summary()
+
+VGG_3B_16_64.build([32, 32, 32, 1])
+VGG_3B_16_64.summary()
+
+VGG_3B_32_128.build([32, 32, 32, 1])
+VGG_3B_32_128.summary()
+
+VGG_3B_32_128_dropout_05.build([64, 32, 32, 1])
+VGG_3B_32_128_dropout_05.summary()

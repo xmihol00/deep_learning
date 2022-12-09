@@ -22,7 +22,7 @@ NUM_OF_TEST_SAMPLES = len(y_test)
 
 y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
 y_test = np.array(y_test).reshape(len(y_test))
-x_train.shape, y_train.shape, x_test.shape, y_test.shape
+
 
 VGG_2B_32_64_dropout_04.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 VGG_2B_32_64_dropout_04.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
