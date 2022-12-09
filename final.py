@@ -4,6 +4,7 @@ import tensorflow.keras.models as tfm
 import tensorflow.keras.layers as tfl
 import tensorflow.keras.callbacks as tfc
 import tensorflow.keras.regularizers as tfr
+import sklearn.metrics as skm
 import tensorflow as tf
 import numpy as np
 import random
@@ -1776,6 +1777,20 @@ class FinalModel():
         self.model.save_weights("./models/final/val_model")
 
         self.val_plot_callback.plot()
+    
+    def evaluate(self, x_test, y_test, validation=False):
+        if validation:
+            self.model.load_weights("./models/final/val_model").expect_partial()
+        else:
+            self.model.load_weights("./models/final/model").expect_partial()
+
+        predictions = self.model.predict(x_test)
+        predictions = (np.argmax(predictions, axis=1) == y_test).sum()
+        accuracy = predictions / y_test.shape[0]
+        print(f"final model accuracy:  {accuracy * 100:.2f} %")
+
+        skm.plot_confusion_matrix(estimator=self.model, X=x_test, y_true=y_test, cmap="Blues", normalize="true", 
+                                  ax=plt.subplots(figsize=(12, 12))[1])
 
 if __name__ == "__main__":
     tf.random.set_seed(42)
@@ -1791,8 +1806,10 @@ if __name__ == "__main__":
     NUM_OF_TEST_SAMPLES = len(y_test)
 
     y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
-    y_test = np.array(y_test).reshape(len(y_test))
+    y_test = np.array(y_test).reshape(-1)
 
     final_model = FinalModel()
-    final_model.train_with_validation(x_train, y_train, 16)
-    #final_model.train(x_train, y_train, 1)
+    #final_model.train_with_validation(x_train, y_train, 16)
+    #final_model.train(x_train, y_train, 16)
+    final_model.evaluate()
+
