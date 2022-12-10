@@ -1773,21 +1773,42 @@ class FinalModel():
             tfl.BatchNormalization(),
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
-            tfl.AveragePool2D(),
+            tfl.AveragePooling2D(),
             tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
             tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
-            tfl.AveragePool2D(),
+            tfl.AveragePooling2D(),
             tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
             tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
-            tfl.AveragePool2D(),
+            tfl.AveragePooling2D(),
             tfl.Flatten(),
             tfl.Dropout(0.5),
             tfl.Dense(256, activation="relu"),
             tfl.Dropout(0.5),
+            tfl.Dense(10, activation="softmax")
+        ])
+
+        self.model_l2 = tfm.Sequential([
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Flatten(),
+            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
             tfl.Dense(10, activation="softmax")
         ])
 
@@ -1808,6 +1829,13 @@ class FinalModel():
 
         self.plot_callback.plot()
     
+    def train_l2(self, x_train, y_train, epochs):
+        self.model_l2.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+        self.model_l2.fit(x_train, y_train, epochs=epochs, batch_size=32, verbose=2, callbacks=self.plot_callback)
+        self.model_l2.save_weights("./models/final/l2_model")
+
+        self.plot_callback.plot()
+    
     def train_with_validation(self, x_train, y_train, epochs):
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, validation_split=0.2, batch_size=32, verbose=2, callbacks=self.val_plot_callback)
@@ -1816,6 +1844,7 @@ class FinalModel():
         self.val_plot_callback.plot()
     
     def evaluate(self, x_test, y_test, dataset="Test", model="model"):
+        self.model = self.model_l2 # todo
         self.model.load_weights(f"./models/final/{model}").expect_partial()
         predictions = self.model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
@@ -1931,7 +1960,7 @@ if __name__ == "__main__":
     #final_model.evaluate(x_test, y_test)
     #final_model.evaluate(x_perturb, y_perturb, "Perturbed")
     final_model = FinalModel()
-    final_model.train(x_train, y_train, 16)
-    final_model.evaluate(x_test, y_test, model="avg_pool_model")
-    final_model.evaluate(x_perturb, y_perturb, "Perturbed", model="avg_pool_model")
+    #final_model.train_l2(x_train, y_train, 16)
+    final_model.evaluate(x_test, y_test, model="l2_model")
+    final_model.evaluate(x_perturb, y_perturb, "Perturbed l2", model="l2_model")
 
