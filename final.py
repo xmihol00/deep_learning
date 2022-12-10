@@ -1203,7 +1203,7 @@ class Models():
 
     def train(self, models_to_train, x_train, y_train):
         # ====================================================== baseline ======================================================
-        if "baseline" in models_to_train or "all" in models_to_train:
+        if type(models_to_train) == str and models_to_train == "baseline":
             print("\n\nbaseline models training:")
             self.FC_SP_16_256.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
             self.FC_SP_16_256.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
@@ -1240,6 +1240,7 @@ class Models():
                                     callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
             self.VGG_3B_32_128.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128")
             del self.VGG_3B_32_128
+            return
 
         # ================================================= batch norm, dropout 0.3 =================================================
         if "dropout_03" in models_to_train or "all" in models_to_train:
@@ -1709,6 +1710,56 @@ class Models():
                                             callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
             self.VGG_3B_32_128_l2_001.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_l2_001")
             del self.VGG_3B_32_128_l2_001
+    
+    def baseline_eval(self, x_test, y_test):
+        NUM_OF_TEST_SAMPLES = y_test.shape[0]
+
+        self.FC_SP_16_256.load_weights("./models/FC_SP_16_256/FC_SP_16_256").expect_partial()
+        FC_SP_16_256_pred = self.FC_SP_16_256.predict(x_test)
+        FC_SP_16_256_accuracy = (np.argmax(FC_SP_16_256_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+        print(f"FC_SP_16_256 accuracy:  {FC_SP_16_256_accuracy * 100:.2f} %")
+        del self.FC_SP_16_256
+
+        self.FC_MP_16_256.load_weights("./models/FC_MP_16_256/FC_MP_16_256").expect_partial()
+        FC_MP_16_256_pred = self.FC_MP_16_256.predict(x_test)
+        FC_MP_16_256_accuracy = (np.argmax(FC_MP_16_256_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+        print(f"FC_MP_16_256 accuracy:  {FC_MP_16_256_accuracy * 100:.2f} %")
+        del self.FC_MP_16_256
+
+
+        self.FC_MP_32_512.load_weights("./models/FC_MP_32_512/FC_MP_32_512").expect_partial()
+        FC_MP_32_512_pred = self.FC_MP_32_512.predict(x_test)
+        FC_MP_32_512_accuracy = (np.argmax(FC_MP_32_512_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+        print(f"FC_MP_32_512 accuracy:  {FC_MP_32_512_accuracy * 100:.2f} %")
+        del self.FC_MP_32_512
+
+
+        self.VGG_2B_32_64.load_weights("./models/VGG_2B_32_64/VGG_2B_32_64").expect_partial()
+        VGG_2B_32_64_pred = self.VGG_2B_32_64.predict(x_test)
+        VGG_2B_32_64_accuracy = (np.argmax(VGG_2B_32_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+        print(f"VGG_2B_32_64 accuracy:  {VGG_2B_32_64_accuracy * 100:.2f} %")
+        del self.VGG_2B_32_64
+
+
+        self.VGG_3B_16_64.load_weights("./models/VGG_3B_16_64/VGG_3B_16_64").expect_partial()
+        VGG_3B_16_64_pred = self.VGG_3B_16_64.predict(x_test)
+        VGG_3B_16_64_accuracy = (np.argmax(VGG_3B_16_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+        print(f"VGG_3B_16_64 accuracy:  {VGG_3B_16_64_accuracy * 100:.2f} %")
+        del self.VGG_3B_16_64
+
+
+        self.VGG_3B_32_128.load_weights("./models/VGG_3B_32_128/VGG_3B_32_128").expect_partial()
+        VGG_3B_32_128_pred = self.VGG_3B_32_128.predict(x_test)
+        VGG_3B_32_128_accuracy = (np.argmax(VGG_3B_32_128_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
+        print(f"VGG_3B_32_128 accuracy: {VGG_3B_32_128_accuracy * 100:.2f} %")
+        del self.VGG_3B_32_128
+    
+    def run(self, mode, models_to_run, x_train, y_train, x_test=None, y_test=None):
+        if mode == "all" or mode == "train":
+            self.train(models_to_run, x_train, y_train)
+        
+        if type(models_to_run) == str and models_to_run == "baseline" and (mode == "all" or mode == "eval"):
+            self.baseline_eval(x_test, y_test)
 
 class PlotCallback(tfc.Callback):
     def __init__(self, validation=False):
@@ -1751,80 +1802,75 @@ class FinalModel():
         self.val_plot_callback = PlotCallback(True)
         self.plot_callback = PlotCallback(False)
 
-        self.final_model = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Flatten(),
-            tfl.Dropout(0.5),
-            tfl.Dense(256, activation="relu"),
-            tfl.Dropout(0.5),
-            tfl.Dense(10, activation="softmax")
-        ])
-
-        self.avg_pool_model = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.AveragePooling2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.AveragePooling2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.AveragePooling2D(),
-            tfl.Flatten(),
-            tfl.Dropout(0.5),
-            tfl.Dense(256, activation="relu"),
-            tfl.Dropout(0.5),
-            tfl.Dense(10, activation="softmax")
-        ])
-
-        self.l2_model = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Dense(10, activation="softmax")
-        ])
-    
-        if self.model_type == "l2":
-            self.model = self.l2_model
+        if self.model_type == "l2_bn":
+            self.model = tfm.Sequential([
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Flatten(),
+                tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Dense(10, activation="softmax")
+            ])
         elif self.model_type == "avg_pool":
-            self.model = self.avg_pool_model
+            self.model = tfm.Sequential([
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.AveragePooling2D(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.AveragePooling2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.AveragePooling2D(),
+                tfl.Flatten(),
+                tfl.Dropout(0.5),
+                tfl.Dense(256, activation="relu"),
+                tfl.Dropout(0.5),
+                tfl.Dense(10, activation="softmax")
+            ])
         else:
-            self.model_type = "final"
-            self.model = self.final_model
+            self.model_type = "final" if self.model_type == None else self.model_type
+            self.model = tfm.Sequential([
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Flatten(),
+                tfl.Dropout(0.5),
+                tfl.Dense(256, activation="relu"),
+                tfl.Dropout(0.5),
+                tfl.Dense(10, activation="softmax")
+            ])
         
         self.model.build((None, 32, 32, 1))
         self.weights = self.model.get_weights()
@@ -1941,10 +1987,134 @@ def augment_data_set(x_dataset, y_dataset):
     shuffel = np.random.choice(y_concat.shape[0], y_concat.shape[0], replace=False)
     return x_concat[shuffel], y_concat[shuffel]
 
+def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, epochs=16):
+    final_model = None
+    l2_bn_model = None
+    avg_pool_model = None
+    augment_model = None
+    
+    if "all" in models_to_run:
+        final_model = FinalModel()
+        l2_bn_model = FinalModel("l2_bn")
+        avg_pool_model = FinalModel("avg_pool")
+        augment_model = FinalModel("augment")
+    else:
+        if "final" in models_to_run:
+            final_model = FinalModel()
+        if "augment" in models_to_run:
+            augment_model = FinalModel("augment")
+        if "l2" in models_to_run:
+            l2_bn_model = FinalModel("l2_bn")
+        if "avg_pool" in models_to_run:
+            avg_pool_model = FinalModel("avg_pool")
+    
+    if mode == "all":
+        if final_model:
+            final_model.train_with_validation(x_train, y_train, epochs)
+            final_model.evaluate_with_validation(x_test, y_test)
+            final_model.train(x_train, y_train, epochs)
+            final_model.evaluate(x_test, y_test)
+            final_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if l2_bn_model:
+            l2_bn_model.train(x_train, y_train, epochs)
+            l2_bn_model.evaluate(x_test, y_test)
+            l2_bn_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if avg_pool_model:
+            avg_pool_model.train(x_train, y_train, epochs)
+            avg_pool_model.evaluate(x_test, y_test)
+            avg_pool_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if augment_model:
+            x_train, y_train = augment_data_set(x_train, y_train)
+
+            augment_model.train(x_train, y_train, epochs)
+            augment_model.evaluate(x_test, y_test)
+            augment_model.evaluate(x_perturb, y_perturb, "Perturbed")
+
+    elif mode == "train":
+        if final_model:
+            final_model.train(x_train, y_train, epochs)
+        
+        if l2_bn_model:
+            l2_bn_model.train(x_train, y_train, epochs)
+        
+        if avg_pool_model:
+            avg_pool_model.train(x_train, y_train, epochs)
+        
+        if augment_model:
+            x_train, y_train = augment_data_set(x_train, y_train)
+
+            augment_model.train(x_train, y_train, epochs)
+
+    elif mode == "val_train":
+        if final_model:
+            final_model.train_with_validation(x_train, y_train, epochs)
+
+    elif mode == "eval":
+        if final_model:
+            final_model.evaluate(x_test, y_test)
+            final_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if l2_bn_model:
+            l2_bn_model.evaluate(x_test, y_test)
+            l2_bn_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if avg_pool_model:
+            avg_pool_model.evaluate(x_test, y_test)
+            avg_pool_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if augment_model:
+            x_train, y_train = augment_data_set(x_train, y_train)
+
+            augment_model.evaluate(x_test, y_test)
+            augment_model.evaluate(x_perturb, y_perturb, "Perturbed")
+
+    elif mode == "val_eval":
+        if final_model:
+            final_model.evaluate_with_validation(x_test, y_test)
+
 if __name__ == "__main__":
     tf.random.set_seed(42)
     np.random.seed(42)
     random.seed(42)
+
+    baseline = False
+    regularization = False
+    final = False
+    plot = False
+    models_to_run = ["all"]
+    mode = "all"
+    
+    if len(sys.argv) == 1:
+        baseline = True
+        final = True
+        regularization = True
+    elif len(sys.argv) > 1:
+        if sys.argv[1].lower() == "plot":
+            plot = True
+        elif sys.argv[1].lower() == "baseline":
+            baseline = True
+        elif sys.argv[1].lower() == "reg" or sys.argv[1].lower() == "regularization":
+            regularization = True
+        elif sys.argv[1].lower() == "final":
+            final = True
+        
+        index = 2
+        if len(sys.argv) > 2:
+            if sys.argv[1].lower() == "train":
+                mode = "train"
+                index = 3
+            elif sys.argv[1].lower() == "eval":
+                mode = "eval"
+                index = 3
+            elif sys.argv[1].lower() == "val_eval":
+                mode = "val_eval"
+                index = 3
+        
+        if len(sys.argv) > index:
+            models_to_run = sys.argv[index:]        
 
     (x_train_RGB, y_train), (x_test_RGB, y_test) = tfd.cifar10.load_data()
     x_train, x_test = np.mean(x_train_RGB, axis=3), np.mean(x_test_RGB, axis=3) # convert to grayscale
@@ -1957,30 +2127,26 @@ if __name__ == "__main__":
     x_perturb = x_perturb / 255 # normalize to pixel values between 0 and 1
     x_perturb = np.expand_dims(x_perturb, -1) # adding chanel dimension
 
-    if len(sys.argv) > 1 and sys.argv[1] == "plot":
+    if plot:
         augmentation_plot(x_test_RGB, x_perturb_RGB)
         exit(0)
-
     del x_perturb_RGB, x_train_RGB, x_test_RGB # RGB images are not needed anymore
 
-    NUM_OF_CLASSES = 10
+    NUM_OF_CLASSES = 10 # CIFAR-10
     y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES) # one-hot encoding of train labels
     y_test = np.array(y_test).reshape(-1)       # test labels to 1 dimensional array
     y_perturb = np.array(y_perturb).reshape(-1) # perturb labels to 1 dimensional array
 
-    x_train, y_train = augment_data_set(x_train, y_train)
+    models = None
+    if baseline or regularization:
+        models = Models()
 
-    #final_model = FinalModel()
-    #final_model.train_with_validation(x_train, y_train, 16)
-    #final_model.evaluate_with_validation(x_test, y_test)
+    if baseline:
+        models.run(mode, "baseline", x_train, y_train, x_test, y_test)
     
-    final_model = FinalModel()
-    final_model.train(x_train, y_train, 16)
-    final_model.evaluate(x_test, y_test)
-    final_model.evaluate(x_perturb, y_perturb, "Perturbed")
-
-    #l2_model = FinalModel("l2")
-    #l2_model.train(x_train, y_train, 16)
-    #l2_model.evaluate(x_test, y_test, model="l2_model")
-    #l2_model.evaluate(x_perturb, y_perturb, "Perturbed l2", model="l2_model")
-
+    if regularization:
+        models.run(mode, models_to_run, x_train, y_train)
+    
+    if final:
+        EPOCHS = 16 # number of epochs discovered as the best when training with early stopping
+        run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, EPOCHS)
