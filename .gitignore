@@ -5,3 +5,5 @@ data/
 models/
 
 __pycache__/
+
+cifar10_perturb_test.pickle

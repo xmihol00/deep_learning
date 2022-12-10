@@ -9,6 +9,7 @@ import tensorflow as tf
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+import pickle
 
 class Models():
     def __init__(self):
@@ -1782,7 +1783,7 @@ class FinalModel():
 
         self.val_plot_callback.plot()
     
-    def evaluate(self, x_test, y_test, validation=False):
+    def evaluate(self, x_test, y_test, dataset="Test"):
         self.model.load_weights("./models/final/model").expect_partial()
         predictions = self.model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
@@ -1790,20 +1791,20 @@ class FinalModel():
         print(f"final model accuracy:  {accuracy * 100:.2f} %")
 
         confusion_matrix = tf.math.confusion_matrix(y_test, predictions).numpy()
-        confusion_matrix = skm.ConfusionMatrixDisplay(confusion_matrix, ["airplane", 
-                                                                         "automobile", 
-                                                                         "bird", 
-                                                                         "cat", 
-                                                                         "deer", 
-                                                                         "dog", 
-                                                                         "frog", 
-                                                                         "horse", 
-                                                                         "ship", 
-                                                                         "truck"])
+        confusion_matrix = skm.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=["airplane", 
+                                                                                                         "automobile", 
+                                                                                                         "bird", 
+                                                                                                         "cat", 
+                                                                                                         "deer", 
+                                                                                                         "dog", 
+                                                                                                         "frog", 
+                                                                                                         "horse", 
+                                                                                                         "ship", 
+                                                                                                         "truck"])
         axis = plt.subplots(figsize=(12, 12))[1]
-        plt.title("Test data set condusion matrix")
+        plt.title(f"{dataset} data set confusion matrix")
         confusion_matrix.plot(cmap="Blues", ax=axis)
-        plt.savefig("confusion_matrix.png")
+        plt.savefig(f"{dataset.lower()}_confusion_matrix.png")
         plt.show()
     
     def evaluate_with_validation(self, x_test, y_test):
@@ -1823,16 +1824,22 @@ if __name__ == "__main__":
     x_train, x_test = x_train / 255, x_test / 255 # normalize to pixel values between 0 and 1
     x_train, x_test = tf.expand_dims(x_train, -1), tf.expand_dims(x_test, -1) # adding chanel dimension
 
-    NUM_OF_CLASSES = 10
-    NUM_OF_TEST_SAMPLES = len(y_test)
+    dict = pickle.load(open("cifar10_perturb_test.pickle", "rb"))
+    x_perturb, y_perturb = dict["x_perturb"], dict["y_perturb"]
+    x_perturb = np.mean(x_perturb, axis=3)
+    x_perturb = x_perturb / 255 # normalize to pixel values between 0 and 1
+    x_perturb = tf.expand_dims(x_perturb, -1) # adding chanel dimension
 
+    NUM_OF_CLASSES = 10
     y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
     y_test = np.array(y_test).reshape(-1)
+    y_perturb = np.array(y_perturb).reshape(-1)
 
+    #final_model = FinalModel()
+    #final_model.train_with_validation(x_train, y_train, 16)
+    #final_model.evaluate_with_validation(x_test, y_test)
     final_model = FinalModel()
-    final_model.train_with_validation(x_train, y_train, 16)
-    final_model.evaluate_with_validation(x_test, y_test)
-    final_model = FinalModel()
-    final_model.train(x_train, y_train, 16)
-    final_model.evaluate(x_test, y_test)
+    #final_model.train(x_train, y_train, 16)
+    #final_model.evaluate(x_test, y_test)
+    final_model.evaluate(x_perturb, y_perturb, "Perturbed")
 
