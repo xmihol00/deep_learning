@@ -10,6 +10,8 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 import pickle
+import skimage.util as sku
+import PIL as pil
 
 class Models():
     def __init__(self):
@@ -1766,6 +1768,29 @@ class FinalModel():
             tfl.Dense(10, activation="softmax")
         ])
 
+        self.model_avg_pool = tfm.Sequential([
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.AveragePool2D(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.AveragePool2D(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.BatchNormalization(),
+            tfl.AveragePool2D(),
+            tfl.Flatten(),
+            tfl.Dropout(0.5),
+            tfl.Dense(256, activation="relu"),
+            tfl.Dropout(0.5),
+            tfl.Dense(10, activation="softmax")
+        ])
+
         self.val_plot_callback = PlotCallback(True)
         self.plot_callback = PlotCallback(False)
     
@@ -1776,6 +1801,13 @@ class FinalModel():
 
         self.plot_callback.plot()
     
+    def train_avg_pool(self, x_train, y_train, epochs):
+        self.model_avg_pool.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+        self.model_avg_pool.fit(x_train, y_train, epochs=epochs, batch_size=32, verbose=2, callbacks=self.plot_callback)
+        self.model_avg_pool.save_weights("./models/final/avg_pool_model")
+
+        self.plot_callback.plot()
+    
     def train_with_validation(self, x_train, y_train, epochs):
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, validation_split=0.2, batch_size=32, verbose=2, callbacks=self.val_plot_callback)
@@ -1783,8 +1815,8 @@ class FinalModel():
 
         self.val_plot_callback.plot()
     
-    def evaluate(self, x_test, y_test, dataset="Test"):
-        self.model.load_weights("./models/final/model").expect_partial()
+    def evaluate(self, x_test, y_test, dataset="Test", model="model"):
+        self.model.load_weights(f"./models/final/{model}").expect_partial()
         predictions = self.model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
@@ -1814,21 +1846,77 @@ class FinalModel():
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
         print(f"final model accuracy trained with validation data set:  {accuracy * 100:.2f} %")
 
+def augmentation_plot(x_test, x_perturb):
+    for test_image, perturb_image in zip(x_test, x_perturb):
+        figure, axis = plt.subplots(3, 3)
+        figure.set_size_inches(14, 9)
+
+        contrast_image = np.asarray(pil.ImageEnhance.Brightness(pil.Image.fromarray(test_image, mode="RGB")).enhance(1.15)) / 255
+        test_image = test_image / 255
+        perturb_image = perturb_image / 255
+        salt_and_pepper_image = sku.random_noise(test_image, mode="s&p", amount=0.0175)
+        gaussian_image = sku.random_noise(test_image, mode="gaussian", var=0.005)
+        perturb_test_difference = perturb_image - test_image
+        salt_and_pepper_difference = salt_and_pepper_image - test_image
+        gaussian_difference = gaussian_image - test_image
+        contrast_difference = contrast_image - test_image
+
+        axis[0, 0].imshow(test_image)
+        axis[0, 0].set_title("Test image")
+        
+        axis[0, 1].imshow(perturb_image)
+        axis[0, 1].set_title("Perturbed image")
+
+        axis[0, 2].imshow(perturb_test_difference)
+        axis[0, 2].set_title(f"Difference between perturbed and test image (mean: {np.mean(perturb_test_difference):.2E})")
+
+        axis[1, 0].imshow(salt_and_pepper_image)
+        axis[1, 0].set_title("Test image with salt and pepper noise")
+
+        axis[1, 1].imshow(gaussian_image)
+        axis[1, 1].set_title("Test image with gaussian noise")
+
+        axis[1, 2].imshow(contrast_image)
+        axis[1, 2].set_title("Test image with decreased contrast")
+
+        axis[2, 0].imshow(salt_and_pepper_difference)
+        axis[2, 0].set_title("Difference salt and peper")
+
+        axis[2, 1].imshow(gaussian_difference)
+        axis[2, 1].set_title("Difference gaussian")
+
+        axis[2, 2].imshow(contrast_difference)
+        axis[2, 2].set_title("Difference decreased contrast")
+        
+        plt.show()
+
+def augment_data_set(dataset):
+    pass
+
 if __name__ == "__main__":
     tf.random.set_seed(42)
     np.random.seed(42)
     random.seed(42)
 
-    (x_train, y_train), (x_test, y_test) = tfd.cifar10.load_data()
-    x_train, x_test = np.mean(x_train, axis=3), np.mean(x_test, axis=3) # convert to grayscale
+    (x_train_RGB, y_train), (x_test_RGB, y_test) = tfd.cifar10.load_data()
+    x_train, x_test = np.mean(x_train_RGB, axis=3), np.mean(x_test_RGB, axis=3) # convert to grayscale
     x_train, x_test = x_train / 255, x_test / 255 # normalize to pixel values between 0 and 1
     x_train, x_test = tf.expand_dims(x_train, -1), tf.expand_dims(x_test, -1) # adding chanel dimension
 
     dict = pickle.load(open("cifar10_perturb_test.pickle", "rb"))
-    x_perturb, y_perturb = dict["x_perturb"], dict["y_perturb"]
-    x_perturb = np.mean(x_perturb, axis=3)
+    x_perturb_RGB, y_perturb = dict["x_perturb"], dict["y_perturb"]
+    x_perturb = np.mean(x_perturb_RGB, axis=3) # convert to grayscale
     x_perturb = x_perturb / 255 # normalize to pixel values between 0 and 1
     x_perturb = tf.expand_dims(x_perturb, -1) # adding chanel dimension
+
+    #noisy_image = sku.random_noise(x_test_RGB[0], mode="s&p", amount=0.01)
+    #plt.imshow(noisy_image)
+    #plt.show()
+    #noisy_image = sku.random_noise(x_test_RGB[0], mode="gaussian", var=0.0001)
+    #plt.imshow(noisy_image)
+    #plt.show()
+    #augmentation_plot(x_test_RGB, x_perturb_RGB)
+    del x_perturb_RGB, x_train_RGB, x_test_RGB
 
     NUM_OF_CLASSES = 10
     y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
@@ -1838,8 +1926,12 @@ if __name__ == "__main__":
     #final_model = FinalModel()
     #final_model.train_with_validation(x_train, y_train, 16)
     #final_model.evaluate_with_validation(x_test, y_test)
-    final_model = FinalModel()
+    #final_model = FinalModel()
     #final_model.train(x_train, y_train, 16)
     #final_model.evaluate(x_test, y_test)
-    final_model.evaluate(x_perturb, y_perturb, "Perturbed")
+    #final_model.evaluate(x_perturb, y_perturb, "Perturbed")
+    final_model = FinalModel()
+    final_model.train(x_train, y_train, 16)
+    final_model.evaluate(x_test, y_test, model="avg_pool_model")
+    final_model.evaluate(x_perturb, y_perturb, "Perturbed", model="avg_pool_model")
 
