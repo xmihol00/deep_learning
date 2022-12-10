@@ -1818,17 +1818,19 @@ class FinalModel():
             tfl.Dense(10, activation="softmax")
         ])
     
-    def assign_model(self):
         if self.model_type == "l2":
-            self.model = copy.copy(self.l2_model)
+            self.model = self.l2_model
         elif self.model_type == "avg_pool":
-            self.model = copy.copy(self.avg_pool_model)
+            self.model = self.avg_pool_model
         else:
             self.model_type = "final"
-            self.model = copy.copy(self.final_model)
+            self.model = self.final_model
+        
+        self.model.build((None, 32, 32, 1))
+        self.weights = self.model.get_weights()
     
     def train(self, x_train, y_train, epochs):
-        self.assign_model()
+        self.model.set_weights(self.weights)
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, batch_size=32, verbose=2, callbacks=self.plot_callback)
         self.model.save_weights(f"./models/final/{self.model_type}_model")
@@ -1836,7 +1838,7 @@ class FinalModel():
         self.plot_callback.plot()
     
     def train_with_validation(self, x_train, y_train, epochs):
-        self.assign_model()
+        self.model.set_weights(self.weights)
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, validation_split=0.2, batch_size=32, verbose=2, callbacks=self.val_plot_callback)
         self.model.save_weights(f"./models/final/val_{self.model_type}_model")
@@ -1844,7 +1846,6 @@ class FinalModel():
         self.val_plot_callback.plot()
     
     def evaluate(self, x_test, y_test, dataset="Test"):
-        self.assign_model()
         self.model.load_weights(f"./models/final/{self.model_type}_model").expect_partial()
         predictions = self.final_model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
