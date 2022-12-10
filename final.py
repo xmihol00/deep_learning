@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 import pickle
 import skimage.util as sku
 import PIL as pil
+import copy
+import sys
 
 class Models():
     def __init__(self):
@@ -1744,8 +1746,12 @@ class PlotCallback(tfc.Callback):
         plt.close()
 
 class FinalModel():
-    def __init__(self):
-        self.model = tfm.Sequential([
+    def __init__(self, model_type=None):
+        self.model_type = model_type
+        self.val_plot_callback = PlotCallback(True)
+        self.plot_callback = PlotCallback(False)
+
+        self.final_model = tfm.Sequential([
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
@@ -1768,7 +1774,7 @@ class FinalModel():
             tfl.Dense(10, activation="softmax")
         ])
 
-        self.model_avg_pool = tfm.Sequential([
+        self.avg_pool_model = tfm.Sequential([
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
@@ -1791,7 +1797,7 @@ class FinalModel():
             tfl.Dense(10, activation="softmax")
         ])
 
-        self.model_l2 = tfm.Sequential([
+        self.l2_model = tfm.Sequential([
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
@@ -1811,45 +1817,39 @@ class FinalModel():
             tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
             tfl.Dense(10, activation="softmax")
         ])
-
-        self.val_plot_callback = PlotCallback(True)
-        self.plot_callback = PlotCallback(False)
+    
+    def assign_model(self):
+        if self.model_type == "l2":
+            self.model = copy.copy(self.l2_model)
+        elif self.model_type == "avg_pool":
+            self.model = copy.copy(self.avg_pool_model)
+        else:
+            self.model_type = "final"
+            self.model = copy.copy(self.final_model)
     
     def train(self, x_train, y_train, epochs):
+        self.assign_model()
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, batch_size=32, verbose=2, callbacks=self.plot_callback)
-        self.model.save_weights("./models/final/model")
-
-        self.plot_callback.plot()
-    
-    def train_avg_pool(self, x_train, y_train, epochs):
-        self.model_avg_pool.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-        self.model_avg_pool.fit(x_train, y_train, epochs=epochs, batch_size=32, verbose=2, callbacks=self.plot_callback)
-        self.model_avg_pool.save_weights("./models/final/avg_pool_model")
-
-        self.plot_callback.plot()
-    
-    def train_l2(self, x_train, y_train, epochs):
-        self.model_l2.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-        self.model_l2.fit(x_train, y_train, epochs=epochs, batch_size=32, verbose=2, callbacks=self.plot_callback)
-        self.model_l2.save_weights("./models/final/l2_model")
+        self.model.save_weights(f"./models/final/{self.model_type}_model")
 
         self.plot_callback.plot()
     
     def train_with_validation(self, x_train, y_train, epochs):
+        self.assign_model()
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, validation_split=0.2, batch_size=32, verbose=2, callbacks=self.val_plot_callback)
-        self.model.save_weights("./models/final/val_model")
+        self.model.save_weights(f"./models/final/val_{self.model_type}_model")
 
         self.val_plot_callback.plot()
     
-    def evaluate(self, x_test, y_test, dataset="Test", model="model"):
-        self.model = self.model_l2 # todo
-        self.model.load_weights(f"./models/final/{model}").expect_partial()
-        predictions = self.model.predict(x_test)
+    def evaluate(self, x_test, y_test, dataset="Test"):
+        self.assign_model()
+        self.model.load_weights(f"./models/final/{self.model_type}_model").expect_partial()
+        predictions = self.final_model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
-        print(f"final model accuracy:  {accuracy * 100:.2f} %")
+        print(f"{self.model_type} model accuracy:  {accuracy * 100:.2f} %")
 
         confusion_matrix = tf.math.confusion_matrix(y_test, predictions).numpy()
         confusion_matrix = skm.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=["airplane", 
@@ -1865,15 +1865,15 @@ class FinalModel():
         axis = plt.subplots(figsize=(12, 12))[1]
         plt.title(f"{dataset} data set confusion matrix")
         confusion_matrix.plot(cmap="Blues", ax=axis)
-        plt.savefig(f"{dataset.lower()}_confusion_matrix.png")
+        plt.savefig(f"{self.model_type}_confusion_matrix.png")
         plt.show()
     
     def evaluate_with_validation(self, x_test, y_test):
-        self.model.load_weights("./models/final/val_model").expect_partial()
-        predictions = self.model.predict(x_test)
+        self.final_model.load_weights(f"./models/final/val_{self.model_type}_model").expect_partial()
+        predictions = self.final_model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
-        print(f"final model accuracy trained with validation data set:  {accuracy * 100:.2f} %")
+        print(f"{self.model_type} model accuracy trained with validation data set:  {accuracy * 100:.2f} %")
 
 def augmentation_plot(x_test, x_perturb):
     for test_image, perturb_image in zip(x_test, x_perturb):
@@ -1919,8 +1919,26 @@ def augmentation_plot(x_test, x_perturb):
         
         plt.show()
 
-def augment_data_set(dataset):
-    pass
+def augment_data_set(x_dataset, y_dataset):
+    x_salt_pepper_set = np.zeros_like(x_dataset)
+    x_gaussian_set = np.zeros_like(x_dataset)
+
+    y_salt_pepper_set = np.zeros_like(y_dataset)
+    y_gaussian_set = np.zeros_like(y_dataset)
+
+    for i, image in enumerate(x_dataset):
+        image = image.numpy()
+
+        x_salt_pepper_set[i] = sku.random_noise(image, mode="s&p", amount=0.0175)
+        x_gaussian_set[i] = sku.random_noise(image, mode="gaussian", var=0.005)
+
+        y_salt_pepper_set[i] = y_dataset[i]
+        y_gaussian_set[i] = y_dataset[i]
+
+    x_concat = np.concatenate((x_dataset, x_salt_pepper_set, x_gaussian_set), 0)
+    y_concat = np.concatenate((y_dataset, y_salt_pepper_set, y_gaussian_set), 0)
+    shuffel = np.random.choice(y_concat.shape[0], y_concat.shape[0], replace=False)
+    return x_concat[shuffel], y_concat[shuffel]
 
 if __name__ == "__main__":
     tf.random.set_seed(42)
@@ -1936,31 +1954,32 @@ if __name__ == "__main__":
     x_perturb_RGB, y_perturb = dict["x_perturb"], dict["y_perturb"]
     x_perturb = np.mean(x_perturb_RGB, axis=3) # convert to grayscale
     x_perturb = x_perturb / 255 # normalize to pixel values between 0 and 1
-    x_perturb = tf.expand_dims(x_perturb, -1) # adding chanel dimension
+    x_perturb = np.expand_dims(x_perturb, -1) # adding chanel dimension
 
-    #noisy_image = sku.random_noise(x_test_RGB[0], mode="s&p", amount=0.01)
-    #plt.imshow(noisy_image)
-    #plt.show()
-    #noisy_image = sku.random_noise(x_test_RGB[0], mode="gaussian", var=0.0001)
-    #plt.imshow(noisy_image)
-    #plt.show()
-    #augmentation_plot(x_test_RGB, x_perturb_RGB)
-    del x_perturb_RGB, x_train_RGB, x_test_RGB
+    if len(sys.argv) > 1 and sys.argv[1] == "plot":
+        augmentation_plot(x_test_RGB, x_perturb_RGB)
+        exit(0)
+
+    del x_perturb_RGB, x_train_RGB, x_test_RGB # RGB images are not needed anymore
 
     NUM_OF_CLASSES = 10
-    y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES)
-    y_test = np.array(y_test).reshape(-1)
-    y_perturb = np.array(y_perturb).reshape(-1)
+    y_train = tfu.to_categorical(y_train, num_classes=NUM_OF_CLASSES) # one-hot encoding of train labels
+    y_test = np.array(y_test).reshape(-1)       # test labels to 1 dimensional array
+    y_perturb = np.array(y_perturb).reshape(-1) # perturb labels to 1 dimensional array
+
+    x_train, y_train = augment_data_set(x_train, y_train)
 
     #final_model = FinalModel()
     #final_model.train_with_validation(x_train, y_train, 16)
     #final_model.evaluate_with_validation(x_test, y_test)
-    #final_model = FinalModel()
-    #final_model.train(x_train, y_train, 16)
-    #final_model.evaluate(x_test, y_test)
-    #final_model.evaluate(x_perturb, y_perturb, "Perturbed")
+    
     final_model = FinalModel()
-    #final_model.train_l2(x_train, y_train, 16)
-    final_model.evaluate(x_test, y_test, model="l2_model")
-    final_model.evaluate(x_perturb, y_perturb, "Perturbed l2", model="l2_model")
+    final_model.train(x_train, y_train, 16)
+    final_model.evaluate(x_test, y_test)
+    final_model.evaluate(x_perturb, y_perturb, "Perturbed")
+
+    #l2_model = FinalModel("l2")
+    #l2_model.train(x_train, y_train, 16)
+    #l2_model.evaluate(x_test, y_test, model="l2_model")
+    #l2_model.evaluate(x_perturb, y_perturb, "Perturbed l2", model="l2_model")
 
