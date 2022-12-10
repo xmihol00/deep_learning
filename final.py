@@ -1790,17 +1790,19 @@ class FinalModel():
         print(f"final model accuracy:  {accuracy * 100:.2f} %")
 
         confusion_matrix = tf.math.confusion_matrix(y_test, predictions).numpy()
-        confusion_matrix = skm.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=["airplane", 
-                                                                                                         "automobile", 
-                                                                                                         "bird", 
-                                                                                                         "cat", 
-                                                                                                         "deer", 
-                                                                                                         "dog", 
-                                                                                                         "frog", 
-                                                                                                         "horse", 
-                                                                                                         "ship", 
-                                                                                                         "truck"])
-        confusion_matrix.plot(cmap="Blues", ax=plt.subplots(figsize=(12, 12))[1])
+        confusion_matrix = skm.ConfusionMatrixDisplay(confusion_matrix, ["airplane", 
+                                                                         "automobile", 
+                                                                         "bird", 
+                                                                         "cat", 
+                                                                         "deer", 
+                                                                         "dog", 
+                                                                         "frog", 
+                                                                         "horse", 
+                                                                         "ship", 
+                                                                         "truck"])
+        axis = plt.subplots(figsize=(12, 12))[1]
+        plt.title("Test data set condusion matrix")
+        confusion_matrix.plot(cmap="Blues", ax=axis)
         plt.savefig("confusion_matrix.png")
         plt.show()
     
