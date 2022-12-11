@@ -823,17 +823,17 @@ class Models():
         ])
 
         self.VGG_3B_32_128_l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.001)),
             tfl.Dense(10, activation="softmax")
         ])
 
@@ -914,17 +914,17 @@ class Models():
         ])
 
         self.VGG_3B_32_128_l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.01)),
             tfl.Dense(10, activation="softmax")
         ])
 
@@ -1686,41 +1686,41 @@ class Models():
         NUM_OF_TEST_SAMPLES = y_test.shape[0]
 
         self.FC_SP_16_256.load_weights("./models/FC_SP_16_256/FC_SP_16_256").expect_partial()
-        FC_SP_16_256_pred = self.FC_SP_16_256.predict(x_test)
+        FC_SP_16_256_pred = self.FC_SP_16_256.predict(x_test, verbose=2)
         FC_SP_16_256_accuracy = (np.argmax(FC_SP_16_256_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
         print(f"FC_SP_16_256 accuracy:  {FC_SP_16_256_accuracy * 100:.2f} %")
         del self.FC_SP_16_256
 
         self.FC_MP_16_256.load_weights("./models/FC_MP_16_256/FC_MP_16_256").expect_partial()
-        FC_MP_16_256_pred = self.FC_MP_16_256.predict(x_test)
+        FC_MP_16_256_pred = self.FC_MP_16_256.predict(x_test, verbose=2)
         FC_MP_16_256_accuracy = (np.argmax(FC_MP_16_256_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
         print(f"FC_MP_16_256 accuracy:  {FC_MP_16_256_accuracy * 100:.2f} %")
         del self.FC_MP_16_256
 
 
         self.FC_MP_32_512.load_weights("./models/FC_MP_32_512/FC_MP_32_512").expect_partial()
-        FC_MP_32_512_pred = self.FC_MP_32_512.predict(x_test)
+        FC_MP_32_512_pred = self.FC_MP_32_512.predict(x_test, verbose=2)
         FC_MP_32_512_accuracy = (np.argmax(FC_MP_32_512_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
         print(f"FC_MP_32_512 accuracy:  {FC_MP_32_512_accuracy * 100:.2f} %")
         del self.FC_MP_32_512
 
 
         self.VGG_2B_32_64.load_weights("./models/VGG_2B_32_64/VGG_2B_32_64").expect_partial()
-        VGG_2B_32_64_pred = self.VGG_2B_32_64.predict(x_test)
+        VGG_2B_32_64_pred = self.VGG_2B_32_64.predict(x_test, verbose=2)
         VGG_2B_32_64_accuracy = (np.argmax(VGG_2B_32_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
         print(f"VGG_2B_32_64 accuracy:  {VGG_2B_32_64_accuracy * 100:.2f} %")
         del self.VGG_2B_32_64
 
 
         self.VGG_3B_16_64.load_weights("./models/VGG_3B_16_64/VGG_3B_16_64").expect_partial()
-        VGG_3B_16_64_pred = self.VGG_3B_16_64.predict(x_test)
+        VGG_3B_16_64_pred = self.VGG_3B_16_64.predict(x_test, verbose=2)
         VGG_3B_16_64_accuracy = (np.argmax(VGG_3B_16_64_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
         print(f"VGG_3B_16_64 accuracy:  {VGG_3B_16_64_accuracy * 100:.2f} %")
         del self.VGG_3B_16_64
 
 
         self.VGG_3B_32_128.load_weights("./models/VGG_3B_32_128/VGG_3B_32_128").expect_partial()
-        VGG_3B_32_128_pred = self.VGG_3B_32_128.predict(x_test)
+        VGG_3B_32_128_pred = self.VGG_3B_32_128.predict(x_test, verbose=2)
         VGG_3B_32_128_accuracy = (np.argmax(VGG_3B_32_128_pred, axis=1) == y_test).sum() / NUM_OF_TEST_SAMPLES
         print(f"VGG_3B_32_128 accuracy: {VGG_3B_32_128_accuracy * 100:.2f} %")
         del self.VGG_3B_32_128
@@ -1895,7 +1895,7 @@ class FinalModel():
         print(f"\n\n{dataset} data set {self.model_type} model evaluation:")
 
         self.model.load_weights(f"./models/final/{self.model_type}_model").expect_partial()
-        predictions = self.model.predict(x_test)
+        predictions = self.model.predict(x_test, verbose=2)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
         print(f"{dataset} data set {self.model_type} model accuracy:  {accuracy * 100:.2f} %")
@@ -1921,7 +1921,7 @@ class FinalModel():
         print(f"\n\n{self.model_type} model evaluation with validation:")
 
         self.model.load_weights(f"./models/final/val_{self.model_type}_model").expect_partial()
-        predictions = self.model.predict(x_test)
+        predictions = self.model.predict(x_test, verbose=2)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
         print(f"{self.model_type} model accuracy trained with validation data set:  {accuracy * 100:.2f} %")
