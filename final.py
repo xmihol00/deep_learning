@@ -1,3 +1,44 @@
+# ========================================================
+# Author: David Mihola (david.mihola@student.tugraz.at)
+# Matrikelnummer: 12211951
+# Date: 21. 12. 2022
+# ========================================================
+
+###################################### How to run the script and reproduce results from the report ######################################
+# 1, Runing the script simply as `python assigment3_mihola.py` will train all the discussed models in the report and evaluate all 
+#    the necessary ones. Although having fixed all possibke random seeds, this execution of the script will not give the exact results 
+#    listed in the report.
+# 2, To get the same results as in the report, each group of models or a single model must be run separately. This can be done by
+#    supplying command line arguments to the script when executing it. The command line arguments are separated into 3 types:
+#      * section of the report with possible values - 'baseline' for the 1st section, 'regularization' or 'reg' fro the second section,
+#                                                     'final' for the  3rd and 4th section and 'plot' to plot the inspection of the 
+#                                                     perturbed data set,
+#      * mode of running - 'train' to train the selected models (in case of section 1 and 2 with validation data set), 'eval' to evaluate 
+#                          the selected models, 'val_train' to train the final model with validation dat set, 'val_eval' to 
+#                          evaluate the final model trained with validation data set, 'all' to perform all listed modes,
+#      * models or group of models - 'final' the final model, 'avg_pool' the modified final model with average pooling layers,
+#                                    'l2_bn' the modified final model with l2 regularization in convolutional layers and with dropout 
+#                                    replaced by l2 regularization, 'l2_bn_dropout' modified final model with l2 regularization in 
+#                                    convolutional and fully connected layers and with 0.25 dropout, 'augment' the final model trained on
+#                                    the augmented training data set, 'batch_norm' the Darknet-53 inspired models only with batch
+#                                    normalization layers, 'dropout_03' the models with dropout rate 0.3, 'dropout_04' the models with 
+#                                    dropout rate 0.4, 'dropout_05' the models with dropout rate 0.5, 'l1_00001' the models with l1
+#                                    regularization of 0.0001, 'l1_0001' the models with l1 regularization of 0.001, 'l1_001' the models 
+#                                    with l1 regularization of 0.01, 'l2_00001' the models with l2 regularization of 0.0001, 'l2_0001' 
+#                                    the models with l2 regularization of 0.001, 'l2_001' the models with l2 regularization of 0.01,
+#                                    'l1l2_00001' the models with l1 and l2 regularization of 0.0001, 'l1l2_0001' the models with l1 and 
+#                                    l2 regularization of 0.001, 'l1l2_001' the models with l1 and l2 regularization of 0.01.
+#    The script is expected to be called `python assigment3_mihola.py [section of the report] [mode of runing] [models]*`.
+#    Examples:
+#      * `python assigment3_mihola.py baseline train` to obtain the results for the Table 1 in the report,
+#      * `python assigment3_mihola.py reg train batch_norm dropout_03 dropout_04 dropout_05 l1_001 l1_0001 l1_00001` to obtain the 
+#         results for the Table 2 in the report,
+#      * `python assigment3_mihola.py reg train l2_001 l2_0001 l2_00001 l1l2_001 l1l2_0001 l1l2_00001` to obtain the results for the 
+#         Table 3 in the report,
+#      * `python assigment3_mihola.py final all final` to obtain the Figure 1 and Figure 2 in the report,
+#      * `python assigment3_mihola.py final all` to obtain the results for Table 5 in the report.
+#########################################################################################################################################
+
 import tensorflow.keras.datasets as tfd
 import tensorflow.keras.utils as tfu
 import tensorflow.keras.models as tfm
@@ -12,7 +53,6 @@ import matplotlib.pyplot as plt
 import pickle
 import skimage.util as sku
 import PIL as pil
-import copy
 import sys
 
 class Models():
@@ -2172,5 +2212,5 @@ if __name__ == "__main__":
         models.run(mode, models_to_run, x_train, y_train)
     
     if final:
-        EPOCHS = 16 # number of epochs discovered as the best when training with early stopping
+        EPOCHS = 15 # number of epochs discovered as the best when training with early stopping
         run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, EPOCHS)
