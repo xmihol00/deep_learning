@@ -47,7 +47,7 @@ for i, (file_name, reg_name) in enumerate(file_reg_names):
             epoch = match.group(1)
             if epoch == '1':
                 if len(current_model):
-                    models.append(current_model[-3])
+                    models.append(current_model[-4])
                     current_model = []
         else:
             loss_match = re.match(r".*?loss: (\d\.\d+).*", line)
@@ -61,7 +61,7 @@ for i, (file_name, reg_name) in enumerate(file_reg_names):
                 float(val_accuracy_match.group(1)) * 100,
                 epoch
             ))
-    models.append(current_model[-3])
+    models.append(current_model[-4])
 
     print("\\thead{", reg_name, "} & ", end="", sep="")
     for j, model_name in enumerate(model_names):
