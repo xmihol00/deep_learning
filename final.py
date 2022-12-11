@@ -1824,6 +1824,30 @@ class FinalModel():
                 tfl.BatchNormalization(),
                 tfl.Dense(10, activation="softmax")
             ])
+        elif self.model_type == "l2_bn_dropout":
+            self.model = tfm.Sequential([
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Flatten(),
+                tfl.Dropout(0.25),
+                tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Dropout(0.25),
+                tfl.Dense(10, activation="softmax")
+            ])
         elif self.model_type == "avg_pool":
             self.model = tfm.Sequential([
                 tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
@@ -1893,7 +1917,7 @@ class FinalModel():
     
     def evaluate(self, x_test, y_test, dataset="Test"):
         self.model.load_weights(f"./models/final/{self.model_type}_model").expect_partial()
-        predictions = self.final_model.predict(x_test)
+        predictions = self.model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
         print(f"{self.model_type} model accuracy:  {accuracy * 100:.2f} %")
@@ -1916,8 +1940,8 @@ class FinalModel():
         plt.show()
     
     def evaluate_with_validation(self, x_test, y_test):
-        self.final_model.load_weights(f"./models/final/val_{self.model_type}_model").expect_partial()
-        predictions = self.final_model.predict(x_test)
+        self.model.load_weights(f"./models/final/val_{self.model_type}_model").expect_partial()
+        predictions = self.model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
         print(f"{self.model_type} model accuracy trained with validation data set:  {accuracy * 100:.2f} %")
@@ -1990,6 +2014,7 @@ def augment_data_set(x_dataset, y_dataset):
 def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, epochs=16):
     final_model = None
     l2_bn_model = None
+    l2_bn_dropout_model = None
     avg_pool_model = None
     augment_model = None
     
@@ -2003,8 +2028,10 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
             final_model = FinalModel()
         if "augment" in models_to_run:
             augment_model = FinalModel("augment")
-        if "l2" in models_to_run:
+        if "l2_bn" in models_to_run:
             l2_bn_model = FinalModel("l2_bn")
+        if "l2_bn_dropout" in models_to_run:
+            l2_bn_model = FinalModel("l2_bn_dropout")
         if "avg_pool" in models_to_run:
             avg_pool_model = FinalModel("avg_pool")
     
@@ -2020,6 +2047,11 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
             l2_bn_model.train(x_train, y_train, epochs)
             l2_bn_model.evaluate(x_test, y_test)
             l2_bn_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if l2_bn_dropout_model:
+            l2_bn_dropout_model.train(x_train, y_train, epochs)
+            l2_bn_dropout_model.evaluate(x_test, y_test)
+            l2_bn_dropout_model.evaluate(x_perturb, y_perturb, "Perturbed")
         
         if avg_pool_model:
             avg_pool_model.train(x_train, y_train, epochs)
@@ -2039,6 +2071,9 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
         
         if l2_bn_model:
             l2_bn_model.train(x_train, y_train, epochs)
+        
+        if l2_bn_dropout_model:
+            l2_bn_dropout_model.train(x_train, y_train, epochs)
         
         if avg_pool_model:
             avg_pool_model.train(x_train, y_train, epochs)
@@ -2060,6 +2095,10 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
         if l2_bn_model:
             l2_bn_model.evaluate(x_test, y_test)
             l2_bn_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if l2_bn_dropout_model:
+            l2_bn_dropout_model.evaluate(x_test, y_test)
+            l2_bn_dropout_model.evaluate(x_perturb, y_perturb, "Perturbed")
         
         if avg_pool_model:
             avg_pool_model.evaluate(x_test, y_test)
@@ -2103,18 +2142,23 @@ if __name__ == "__main__":
         
         index = 2
         if len(sys.argv) > 2:
-            if sys.argv[1].lower() == "train":
+            if sys.argv[2].lower() == "train":
                 mode = "train"
                 index = 3
-            elif sys.argv[1].lower() == "eval":
+            elif sys.argv[2].lower() == "eval":
                 mode = "eval"
                 index = 3
-            elif sys.argv[1].lower() == "val_eval":
+            elif sys.argv[2].lower() == "val_train":
+                mode = "val_train"
+                index = 3
+            elif sys.argv[2].lower() == "val_eval":
                 mode = "val_eval"
+                index = 3
+            elif sys.argv[2].lower() == "all":
                 index = 3
         
         if len(sys.argv) > index:
-            models_to_run = sys.argv[index:]        
+            models_to_run = sys.argv[index:]
 
     (x_train_RGB, y_train), (x_test_RGB, y_test) = tfd.cifar10.load_data()
     x_train, x_test = np.mean(x_train_RGB, axis=3), np.mean(x_test_RGB, axis=3) # convert to grayscale
@@ -2126,6 +2170,8 @@ if __name__ == "__main__":
     x_perturb = np.mean(x_perturb_RGB, axis=3) # convert to grayscale
     x_perturb = x_perturb / 255 # normalize to pixel values between 0 and 1
     x_perturb = np.expand_dims(x_perturb, -1) # adding chanel dimension
+
+    #x_train, y_train = x_train[:1000], y_train[0:1000]
 
     if plot:
         augmentation_plot(x_test_RGB, x_perturb_RGB)
