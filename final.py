@@ -17,6 +17,10 @@ import sys
 
 class Models():
     def __init__(self):
+        pass
+    
+    def assign_models(self):
+        # ====================================================== baseline ======================================================
         self.FC_SP_16_256 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
@@ -107,8 +111,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
-
+        # ===================================================== batch norm =====================================================
         self.FC_SP_16_256_batch_norm = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
@@ -178,6 +181,7 @@ class Models():
             tfl.Reshape([10])
         ])
 
+        # ==================================================== dropout 0.5 ====================================================
         self.VGG_2B_32_64_dropout_05 = tfm.Sequential([
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
@@ -244,7 +248,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== dropout 0.4 ====================================================
         self.VGG_2B_32_64_dropout_04 = tfm.Sequential([
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
@@ -311,7 +315,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== dropout 0.3 ====================================================
         self.VGG_2B_32_64_dropout_03 = tfm.Sequential([
             tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
             tfl.BatchNormalization(),
@@ -378,7 +382,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== l1 0.0001 ====================================================
         self.FC_SP_16_256_l1_00001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
@@ -469,7 +473,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== l1 0.001 ====================================================
         self.FC_SP_16_256_l1_0001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
@@ -560,7 +564,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== l1 0.01 ====================================================
         self.FC_SP_16_256_l1_001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
@@ -651,9 +655,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
-
-
+        # ==================================================== l2 0.0001 ====================================================
         self.FC_SP_16_256_l2_00001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
@@ -744,7 +746,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== l1 0.001 ====================================================
         self.FC_SP_16_256_l2_0001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
@@ -835,7 +837,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== l1 0.01 ====================================================
         self.FC_SP_16_256_l2_001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
@@ -927,7 +929,7 @@ class Models():
         ])
 
 
-
+        # ==================================================== l1l2 0.0001 ====================================================
         self.FC_SP_16_256_l1l2_00001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
@@ -1018,7 +1020,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== l1l2 0.001 ====================================================
         self.FC_SP_16_256_l1l2_0001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
@@ -1109,7 +1111,7 @@ class Models():
             tfl.Dense(10, activation="softmax")
         ])
 
-
+        # ==================================================== l1l2 0.01 ====================================================
         self.FC_SP_16_256_l1l2_001 = tfm.Sequential([
             tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
@@ -1241,10 +1243,10 @@ class Models():
             self.VGG_3B_32_128.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128")
             del self.VGG_3B_32_128
             return
-
-        # ================================================= batch norm, dropout 0.3 =================================================
-        if "dropout_03" in models_to_train or "all" in models_to_train:
-            print("\n\nbatch norm, dropout_03 models training:")
+        
+        # ==================================================== batch norm. ====================================================
+        if "batch_norm" in models_to_train or "all" in models_to_train:
+            print("\n\nbatch norm models training:")
             self.FC_SP_16_256_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
             self.FC_SP_16_256_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                         callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
@@ -1262,6 +1264,10 @@ class Models():
                                         callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
             self.FC_MP_32_512_batch_norm.save_weights("./models/FC_MP_32_512/FC_MP_32_512_batch_norm")
             del self.FC_MP_32_512_batch_norm
+
+        # ==================================================== dropout 0.3 ====================================================
+        if "dropout_03" in models_to_train or "all" in models_to_train:
+            print("\n\ndropout_03 models training:")
 
             self.VGG_2B_32_64_dropout_03.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
             self.VGG_2B_32_64_dropout_03.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
@@ -1281,26 +1287,9 @@ class Models():
             self.VGG_3B_32_128_dropout_03.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_dropout_03")
             del self.VGG_3B_32_128_dropout_03
 
-        # ================================================= batch norm, dropout 0.4 =================================================
+        # ==================================================== dropout 0.4 ====================================================
         if "dropout_04" in models_to_train or "all" in models_to_train:
-            print("\n\nbatch norm, dropout_04 models training:")
-            self.FC_SP_16_256_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-            self.FC_SP_16_256_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
-                        callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-            self.FC_SP_16_256_batch_norm.save_weights("./models/FC_SP_16_256/FC_SP_16_256_batch_norm")
-            del self.FC_SP_16_256_batch_norm
-
-            self.FC_MP_16_256_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-            self.FC_MP_16_256_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
-                        callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-            self.FC_MP_16_256_batch_norm.save_weights("./models/FC_MP_16_256/FC_MP_16_256_batch_norm")
-            del self.FC_MP_16_256_batch_norm
-
-            self.FC_MP_32_512_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-            self.FC_MP_32_512_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
-                                        callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-            self.FC_MP_32_512_batch_norm.save_weights("./models/FC_MP_32_512/FC_MP_32_512_batch_norm")
-            del self.FC_MP_32_512_batch_norm
+            print("\n\ndropout_04 models training:")
 
             self.VGG_2B_32_64_dropout_04.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
             self.VGG_2B_32_64_dropout_04.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
@@ -1320,28 +1309,9 @@ class Models():
             self.VGG_3B_32_128_dropout_04.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_dropout_04")
             del self.VGG_3B_32_128_dropout_04
 
-        # ================================================= batch norm, dropout 0.5 =================================================
+        # ==================================================== dropout 0.5 ====================================================
         if "dropout_05" in models_to_train or "all" in models_to_train:
             print("\n\ndropout_05 models training:")
-            self.FC_SP_16_256_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-            self.FC_SP_16_256_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
-                        callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-            self.FC_SP_16_256_batch_norm.save_weights("./models/FC_SP_16_256/FC_SP_16_256_batch_norm")
-            del self.FC_SP_16_256_batch_norm
-
-
-            self.FC_MP_16_256_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-            self.FC_MP_16_256_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
-                        callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-            self.FC_MP_16_256_batch_norm.save_weights("./models/FC_MP_16_256/FC_MP_16_256_batch_norm")
-            del self.FC_MP_16_256_batch_norm
-
-            self.FC_MP_32_512_batch_norm.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-            self.FC_MP_32_512_batch_norm.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
-                                        callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-            self.FC_MP_32_512_batch_norm.save_weights("./models/FC_MP_32_512/FC_MP_32_512_batch_norm")
-            del self.FC_MP_32_512_batch_norm
-
             self.VGG_2B_32_64_dropout_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
             self.VGG_2B_32_64_dropout_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
                                     callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
@@ -1354,11 +1324,11 @@ class Models():
             self.VGG_3B_16_64_dropout_05.save_weights("./models/VGG_3B_16_64/VGG_3B_16_64_dropout_05")
             del self.VGG_3B_16_64_dropout_05
 
-        self.VGG_3B_32_128_dropout_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-        self.VGG_3B_32_128_dropout_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
-                                callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
-        self.VGG_3B_32_128_dropout_05.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_dropout_05")
-        del self.VGG_3B_32_128_dropout_05
+            self.VGG_3B_32_128_dropout_05.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+            self.VGG_3B_32_128_dropout_05.fit(x_train, y_train, epochs=100, validation_split=0.2, batch_size=32, verbose=2,
+                                    callbacks=[tfc.EarlyStopping(monitor="val_accuracy", patience=3, mode="max", restore_best_weights=True)])
+            self.VGG_3B_32_128_dropout_05.save_weights("./models/VGG_3B_32_128/VGG_3B_32_128_dropout_05")
+            del self.VGG_3B_32_128_dropout_05
 
         # ====================================================== l1l2 0.0001 ======================================================
         if "l1l2_00001" in models_to_train or "all" in models_to_train:
@@ -1712,6 +1682,7 @@ class Models():
             del self.VGG_3B_32_128_l2_001
     
     def baseline_eval(self, x_test, y_test):
+        print("\n\nbaseline model evaluation:")
         NUM_OF_TEST_SAMPLES = y_test.shape[0]
 
         self.FC_SP_16_256.load_weights("./models/FC_SP_16_256/FC_SP_16_256").expect_partial()
@@ -1756,9 +1727,11 @@ class Models():
     
     def run(self, mode, models_to_run, x_train, y_train, x_test=None, y_test=None):
         if mode == "all" or mode == "train":
+            self.assign_models()
             self.train(models_to_run, x_train, y_train)
         
         if type(models_to_run) == str and models_to_run == "baseline" and (mode == "all" or mode == "eval"):
+            self.assign_models()
             self.baseline_eval(x_test, y_test)
 
 class PlotCallback(tfc.Callback):
@@ -1793,7 +1766,6 @@ class PlotCallback(tfc.Callback):
             filename = "final_model_training.png"
 
         plt.savefig(filename)
-        plt.show()
         plt.close()
 
 class FinalModel():
@@ -1900,6 +1872,8 @@ class FinalModel():
         self.weights = self.model.get_weights()
     
     def train(self, x_train, y_train, epochs):
+        print(f"\n\n{self.model_type} model training:")
+
         self.model.set_weights(self.weights)
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, batch_size=32, verbose=2, callbacks=self.plot_callback)
@@ -1908,6 +1882,8 @@ class FinalModel():
         self.plot_callback.plot()
     
     def train_with_validation(self, x_train, y_train, epochs):
+        print(f"\n\n{self.model_type} model training with validation:")
+
         self.model.set_weights(self.weights)
         self.model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
         self.model.fit(x_train, y_train, epochs=epochs, validation_split=0.2, batch_size=32, verbose=2, callbacks=self.val_plot_callback)
@@ -1916,11 +1892,13 @@ class FinalModel():
         self.val_plot_callback.plot()
     
     def evaluate(self, x_test, y_test, dataset="Test"):
+        print(f"\n\n{dataset} data set {self.model_type} model evaluation:")
+
         self.model.load_weights(f"./models/final/{self.model_type}_model").expect_partial()
         predictions = self.model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
         accuracy = (predictions == y_test).sum() / y_test.shape[0]
-        print(f"{self.model_type} model accuracy:  {accuracy * 100:.2f} %")
+        print(f"{dataset} data set {self.model_type} model accuracy:  {accuracy * 100:.2f} %")
 
         confusion_matrix = tf.math.confusion_matrix(y_test, predictions).numpy()
         confusion_matrix = skm.ConfusionMatrixDisplay(confusion_matrix=confusion_matrix, display_labels=["airplane", 
@@ -1937,9 +1915,11 @@ class FinalModel():
         plt.title(f"{dataset} data set confusion matrix")
         confusion_matrix.plot(cmap="Blues", ax=axis)
         plt.savefig(f"{self.model_type}_confusion_matrix.png")
-        plt.show()
+        plt.close()
     
     def evaluate_with_validation(self, x_test, y_test):
+        print(f"\n\n{self.model_type} model evaluation with validation:")
+
         self.model.load_weights(f"./models/final/val_{self.model_type}_model").expect_partial()
         predictions = self.model.predict(x_test)
         predictions = np.argmax(predictions, axis=1)        
@@ -2171,7 +2151,7 @@ if __name__ == "__main__":
     x_perturb = x_perturb / 255 # normalize to pixel values between 0 and 1
     x_perturb = np.expand_dims(x_perturb, -1) # adding chanel dimension
 
-    #x_train, y_train = x_train[:1000], y_train[0:1000]
+    #x_train, y_train = x_train[:320], y_train[0:320]
 
     if plot:
         augmentation_plot(x_test_RGB, x_perturb_RGB)
@@ -2183,9 +2163,7 @@ if __name__ == "__main__":
     y_test = np.array(y_test).reshape(-1)       # test labels to 1 dimensional array
     y_perturb = np.array(y_perturb).reshape(-1) # perturb labels to 1 dimensional array
 
-    models = None
-    if baseline or regularization:
-        models = Models()
+    models = Models()
 
     if baseline:
         models.run(mode, "baseline", x_train, y_train, x_test, y_test)
