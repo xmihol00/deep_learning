@@ -16,7 +16,7 @@
 #      * mode of running - 'train' to train the selected models (in case of section 1 and 2 with validation data set), 'eval' to evaluate 
 #                          the selected models, 'val_train' to train the final model with validation dat set, 'val_eval' to 
 #                          evaluate the final model trained with validation data set, 'all' to perform all listed modes,
-#      * models or group of models - 'final' the final model, 'avg_pool' the modified final model with average pooling layers,
+#      * model or group of models - 'final' the final model, 'avg_pool' the modified final model with average pooling layers,
 #                                    'l2_bn' the modified final model with l2 regularization in convolutional layers and with dropout 
 #                                    replaced by l2 regularization, 'l2_bn_dropout' modified final model with l2 regularization in 
 #                                    convolutional and fully connected layers and with 0.25 dropout, 'augment' the final model trained on
@@ -28,7 +28,7 @@
 #                                    the models with l2 regularization of 0.001, 'l2_001' the models with l2 regularization of 0.01,
 #                                    'l1l2_00001' the models with l1 and l2 regularization of 0.0001, 'l1l2_0001' the models with l1 and 
 #                                    l2 regularization of 0.001, 'l1l2_001' the models with l1 and l2 regularization of 0.01.
-#    The script is expected to be called `python assigment3_mihola.py [section of the report] [mode of runing] [models]*`.
+#    The script is expected to be called `python assigment3_mihola.py [section of the report] [mode of runing] [model/models]`.
 #    Examples:
 #      * `python assigment3_mihola.py baseline train` to obtain the results for the Table 1 in the report,
 #      * `python assigment3_mihola.py reg train batch_norm dropout_03 dropout_04 dropout_05 l1_001 l1_0001 l1_00001` to obtain the 
@@ -45,6 +45,7 @@ import tensorflow.keras.models as tfm
 import tensorflow.keras.layers as tfl
 import tensorflow.keras.callbacks as tfc
 import tensorflow.keras.regularizers as tfr
+import tensorflow.keras.initializers as tfi
 import sklearn.metrics as skm
 import tensorflow as tf
 import numpy as np
@@ -55,6 +56,8 @@ import skimage.util as sku
 import PIL as pil
 import sys
 
+RANDOM_SEED = 42
+
 class Models():
     def __init__(self):
         pass
@@ -62,1184 +65,1184 @@ class Models():
     def assign_models(self):
         # ====================================================== baseline ======================================================
         self.FC_SP_16_256 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same"),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same"),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu"),
-            tfl.Dense(128, activation="relu"),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu"),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu"),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ===================================================== batch norm =====================================================
         self.FC_SP_16_256_batch_norm = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_batch_norm = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_batch_norm = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         # ==================================================== dropout 0.5 ====================================================
         self.VGG_2B_32_64_dropout_05 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.5),
-            tfl.Dense(256, activation="relu"),
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.5),
-            tfl.Dense(128, activation="relu"),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.5),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_dropout_05 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.5),
-            tfl.Dense(128, activation="relu"),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.5),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_dropout_05 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.5),
-            tfl.Dense(256, activation="relu"),
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.5),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== dropout 0.4 ====================================================
         self.VGG_2B_32_64_dropout_04 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.4),
-            tfl.Dense(256, activation="relu"),
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.4),
-            tfl.Dense(128, activation="relu"),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.4),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_dropout_04 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.4),
-            tfl.Dense(128, activation="relu"),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.4),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_dropout_04 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.4),
-            tfl.Dense(256, activation="relu"),
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.4),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== dropout 0.3 ====================================================
         self.VGG_2B_32_64_dropout_03 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.3),
-            tfl.Dense(256, activation="relu"),
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.3),
-            tfl.Dense(128, activation="relu"),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.3),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_dropout_03 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.3),
-            tfl.Dense(128, activation="relu"),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.3),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_dropout_03 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-            tfl.BatchNormalization(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.MaxPool2D(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+            tfl.BatchNormalization(),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.BatchNormalization(),
             tfl.MaxPool2D(),
             tfl.Flatten(),
             tfl.Dropout(0.3),
-            tfl.Dense(256, activation="relu"),
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
             tfl.Dropout(0.3),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l1 0.0001 ====================================================
         self.FC_SP_16_256_l1_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l1_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l1_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l1_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l1_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l1_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l1 0.001 ====================================================
         self.FC_SP_16_256_l1_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l1_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l1_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l1_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.001)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l1_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l1_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l1 0.01 ====================================================
         self.FC_SP_16_256_l1_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l1_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l1_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l1_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.01)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l1_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l1_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l2 0.0001 ====================================================
         self.FC_SP_16_256_l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l1 0.001 ====================================================
         self.FC_SP_16_256_l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.001)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L2(0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l1 0.01 ====================================================
         self.FC_SP_16_256_l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.01)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L2(0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1(0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1(0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1(0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
 
         # ==================================================== l1l2 0.0001 ====================================================
         self.FC_SP_16_256_l1l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l1l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l1l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l1l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l1l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l1l2_00001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.0001, 0.0001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l1l2 0.001 ====================================================
         self.FC_SP_16_256_l1l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l1l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l1l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l1l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l1l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l1l2_0001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1L2(0.001, 0.001)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.001, 0.001)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         # ==================================================== l1l2 0.01 ====================================================
         self.FC_SP_16_256_l1l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), strides=(2, 2), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])                                                                               
         ])
 
         self.FC_MP_16_256_l1l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=128, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.FC_MP_32_512_l1l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=256, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=512, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", padding="same"),
+            tfl.Conv2D(filters=256, kernel_size=(1, 1), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=10, kernel_size=(1, 1), activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
             tfl.Reshape([10])
         ])
 
         self.VGG_2B_32_64_l1l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_16_64_l1l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=16, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(128, activation="relu", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(128, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
         self.VGG_3B_32_128_l1l2_001 = tfm.Sequential([
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
             tfl.MaxPool2D(),
             tfl.Flatten(),
-            tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L1L2(0.01, 0.01)),
-            tfl.Dense(10, activation="softmax")
+            tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L1L2(0.01, 0.01)),
+            tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
         ])
 
 
@@ -1816,96 +1819,96 @@ class FinalModel():
 
         if self.model_type == "l2_bn":
             self.model = tfm.Sequential([
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-                tfl.BatchNormalization(),
-                tfl.MaxPool2D(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-                tfl.BatchNormalization(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
                 tfl.MaxPool2D(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
                 tfl.MaxPool2D(),
                 tfl.Flatten(),
-                tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
-                tfl.Dense(10, activation="softmax")
+                tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
             ])
         elif self.model_type == "l2_bn_dropout":
             self.model = tfm.Sequential([
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-                tfl.BatchNormalization(),
-                tfl.MaxPool2D(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
-                tfl.BatchNormalization(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
                 tfl.MaxPool2D(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same", kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
                 tfl.MaxPool2D(),
                 tfl.Flatten(),
                 tfl.Dropout(0.25),
-                tfl.Dense(256, activation="relu", kernel_regularizer=tfr.L2(0.0001)),
+                tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), kernel_regularizer=tfr.L2(0.0001)),
                 tfl.BatchNormalization(),
                 tfl.Dropout(0.25),
-                tfl.Dense(10, activation="softmax")
+                tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
             ])
         elif self.model_type == "avg_pool":
             self.model = tfm.Sequential([
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-                tfl.BatchNormalization(),
-                tfl.AveragePooling2D(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-                tfl.BatchNormalization(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
                 tfl.AveragePooling2D(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.AveragePooling2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
                 tfl.AveragePooling2D(),
                 tfl.Flatten(),
                 tfl.Dropout(0.5),
-                tfl.Dense(256, activation="relu"),
+                tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
                 tfl.Dropout(0.5),
-                tfl.Dense(10, activation="softmax")
+                tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
             ])
         else:
             self.model_type = "final" if self.model_type == None else self.model_type
             self.model = tfm.Sequential([
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", padding="same"),
-                tfl.BatchNormalization(),
-                tfl.MaxPool2D(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
-                tfl.BatchNormalization(),
-                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
                 tfl.MaxPool2D(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
-                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", padding="same"),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
                 tfl.BatchNormalization(),
                 tfl.MaxPool2D(),
                 tfl.Flatten(),
                 tfl.Dropout(0.5),
-                tfl.Dense(256, activation="relu"),
+                tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
                 tfl.Dropout(0.5),
-                tfl.Dense(10, activation="softmax")
+                tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
             ])
         
         self.model.build((None, 32, 32, 1))
@@ -2135,9 +2138,9 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
             final_model.evaluate_with_validation(x_test, y_test)
 
 if __name__ == "__main__":
-    tf.random.set_seed(42)
-    np.random.seed(42)
-    random.seed(42)
+    tf.random.set_seed(RANDOM_SEED)
+    np.random.seed(RANDOM_SEED)
+    random.seed(RANDOM_SEED)
 
     baseline = False
     regularization = False
