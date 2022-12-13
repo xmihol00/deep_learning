@@ -1,0 +1,190 @@
+
+
+final model training with validation:
+Epoch 1/13
+1250/1250 - 41s - loss: 1.6689 - accuracy: 0.4121 - val_loss: 1.3982 - val_accuracy: 0.4993 - 41s/epoch - 33ms/step
+Epoch 2/13
+1250/1250 - 40s - loss: 1.1596 - accuracy: 0.5980 - val_loss: 0.9319 - val_accuracy: 0.6752 - 40s/epoch - 32ms/step
+Epoch 3/13
+1250/1250 - 40s - loss: 0.9761 - accuracy: 0.6658 - val_loss: 0.8560 - val_accuracy: 0.7056 - 40s/epoch - 32ms/step
+Epoch 4/13
+1250/1250 - 41s - loss: 0.8631 - accuracy: 0.7043 - val_loss: 0.9672 - val_accuracy: 0.6919 - 41s/epoch - 33ms/step
+Epoch 5/13
+1250/1250 - 41s - loss: 0.7772 - accuracy: 0.7367 - val_loss: 0.8284 - val_accuracy: 0.7222 - 41s/epoch - 33ms/step
+Epoch 6/13
+1250/1250 - 41s - loss: 0.6969 - accuracy: 0.7655 - val_loss: 0.7795 - val_accuracy: 0.7359 - 41s/epoch - 33ms/step
+Epoch 7/13
+1250/1250 - 41s - loss: 0.6341 - accuracy: 0.7872 - val_loss: 0.6637 - val_accuracy: 0.7770 - 41s/epoch - 33ms/step
+Epoch 8/13
+1250/1250 - 42s - loss: 0.5819 - accuracy: 0.8044 - val_loss: 0.8176 - val_accuracy: 0.7454 - 42s/epoch - 33ms/step
+Epoch 9/13
+1250/1250 - 42s - loss: 0.5294 - accuracy: 0.8195 - val_loss: 0.6253 - val_accuracy: 0.7970 - 42s/epoch - 33ms/step
+Epoch 10/13
+1250/1250 - 42s - loss: 0.4876 - accuracy: 0.8323 - val_loss: 0.6473 - val_accuracy: 0.7942 - 42s/epoch - 34ms/step
+Epoch 11/13
+1250/1250 - 42s - loss: 0.4492 - accuracy: 0.8467 - val_loss: 0.7457 - val_accuracy: 0.7640 - 42s/epoch - 34ms/step
+Epoch 12/13
+1250/1250 - 42s - loss: 0.4197 - accuracy: 0.8554 - val_loss: 0.6106 - val_accuracy: 0.8091 - 42s/epoch - 33ms/step
+Epoch 13/13
+1250/1250 - 42s - loss: 0.3885 - accuracy: 0.8658 - val_loss: 0.5962 - val_accuracy: 0.8123 - 42s/epoch - 34ms/step
+
+
+final model evaluation with validation:
+313/313 - 4s - 4s/epoch - 13ms/step
+final model accuracy trained with validation data set:  80.27 %
+
+
+final model training:
+Epoch 1/13
+1563/1563 - 49s - loss: 1.5811 - accuracy: 0.4415 - 49s/epoch - 31ms/step
+Epoch 2/13
+1563/1563 - 49s - loss: 1.0855 - accuracy: 0.6258 - 49s/epoch - 31ms/step
+Epoch 3/13
+1563/1563 - 49s - loss: 0.9155 - accuracy: 0.6904 - 49s/epoch - 31ms/step
+Epoch 4/13
+1563/1563 - 49s - loss: 0.8072 - accuracy: 0.7246 - 49s/epoch - 31ms/step
+Epoch 5/13
+1563/1563 - 49s - loss: 0.7229 - accuracy: 0.7568 - 49s/epoch - 31ms/step
+Epoch 6/13
+1563/1563 - 49s - loss: 0.6516 - accuracy: 0.7788 - 49s/epoch - 31ms/step
+Epoch 7/13
+1563/1563 - 49s - loss: 0.5924 - accuracy: 0.7990 - 49s/epoch - 31ms/step
+Epoch 8/13
+1563/1563 - 49s - loss: 0.5490 - accuracy: 0.8135 - 49s/epoch - 31ms/step
+Epoch 9/13
+1563/1563 - 49s - loss: 0.4999 - accuracy: 0.8304 - 49s/epoch - 31ms/step
+Epoch 10/13
+1563/1563 - 49s - loss: 0.4605 - accuracy: 0.8428 - 49s/epoch - 31ms/step
+Epoch 11/13
+1563/1563 - 49s - loss: 0.4243 - accuracy: 0.8550 - 49s/epoch - 31ms/step
+Epoch 12/13
+1563/1563 - 49s - loss: 0.3903 - accuracy: 0.8668 - 49s/epoch - 31ms/step
+Epoch 13/13
+1563/1563 - 49s - loss: 0.3566 - accuracy: 0.8782 - 49s/epoch - 31ms/step
+
+
+Test data set final model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Test data set final model accuracy:  81.44 %
+
+
+Perturbed data set final model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Perturbed data set final model accuracy:  63.58 %
+
+
+l2_bn model training:
+Epoch 1/13
+1563/1563 - 51s - loss: 1.3191 - accuracy: 0.5738 - 51s/epoch - 32ms/step
+Epoch 2/13
+1563/1563 - 50s - loss: 0.9152 - accuracy: 0.7237 - 50s/epoch - 32ms/step
+Epoch 3/13
+1563/1563 - 50s - loss: 0.8052 - accuracy: 0.7731 - 50s/epoch - 32ms/step
+Epoch 4/13
+1563/1563 - 50s - loss: 0.7464 - accuracy: 0.8084 - 50s/epoch - 32ms/step
+Epoch 5/13
+1563/1563 - 50s - loss: 0.6950 - accuracy: 0.8411 - 50s/epoch - 32ms/step
+Epoch 6/13
+1563/1563 - 50s - loss: 0.6630 - accuracy: 0.8608 - 50s/epoch - 32ms/step
+Epoch 7/13
+1563/1563 - 50s - loss: 0.6248 - accuracy: 0.8827 - 50s/epoch - 32ms/step
+Epoch 8/13
+1563/1563 - 50s - loss: 0.6014 - accuracy: 0.8995 - 50s/epoch - 32ms/step
+Epoch 9/13
+1563/1563 - 50s - loss: 0.5916 - accuracy: 0.9103 - 50s/epoch - 32ms/step
+Epoch 10/13
+1563/1563 - 50s - loss: 0.5786 - accuracy: 0.9195 - 50s/epoch - 32ms/step
+Epoch 11/13
+1563/1563 - 50s - loss: 0.5702 - accuracy: 0.9250 - 50s/epoch - 32ms/step
+Epoch 12/13
+1563/1563 - 50s - loss: 0.5769 - accuracy: 0.9264 - 50s/epoch - 32ms/step
+Epoch 13/13
+1563/1563 - 50s - loss: 0.5691 - accuracy: 0.9332 - 50s/epoch - 32ms/step
+
+
+Test data set l2_bn model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Test data set l2_bn model accuracy:  79.67 %
+
+
+Perturbed data set l2_bn model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Perturbed data set l2_bn model accuracy:  62.14 %
+
+
+avg_pool model training:
+Epoch 1/13
+1563/1563 - 50s - loss: 1.4422 - accuracy: 0.5012 - 50s/epoch - 32ms/step
+Epoch 2/13
+1563/1563 - 50s - loss: 0.9652 - accuracy: 0.6657 - 50s/epoch - 32ms/step
+Epoch 3/13
+1563/1563 - 50s - loss: 0.8128 - accuracy: 0.7200 - 50s/epoch - 32ms/step
+Epoch 4/13
+1563/1563 - 50s - loss: 0.7028 - accuracy: 0.7591 - 50s/epoch - 32ms/step
+Epoch 5/13
+1563/1563 - 50s - loss: 0.6133 - accuracy: 0.7902 - 50s/epoch - 32ms/step
+Epoch 6/13
+1563/1563 - 50s - loss: 0.5516 - accuracy: 0.8097 - 50s/epoch - 32ms/step
+Epoch 7/13
+1563/1563 - 49s - loss: 0.4963 - accuracy: 0.8274 - 49s/epoch - 32ms/step
+Epoch 8/13
+1563/1563 - 50s - loss: 0.4446 - accuracy: 0.8459 - 50s/epoch - 32ms/step
+Epoch 9/13
+1563/1563 - 50s - loss: 0.4066 - accuracy: 0.8584 - 50s/epoch - 32ms/step
+Epoch 10/13
+1563/1563 - 50s - loss: 0.3723 - accuracy: 0.8705 - 50s/epoch - 32ms/step
+Epoch 11/13
+1563/1563 - 50s - loss: 0.3439 - accuracy: 0.8798 - 50s/epoch - 32ms/step
+Epoch 12/13
+1563/1563 - 50s - loss: 0.3245 - accuracy: 0.8882 - 50s/epoch - 32ms/step
+Epoch 13/13
+1563/1563 - 50s - loss: 0.2970 - accuracy: 0.8971 - 50s/epoch - 32ms/step
+
+
+Test data set avg_pool model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Test data set avg_pool model accuracy:  81.41 %
+
+
+Perturbed data set avg_pool model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Perturbed data set avg_pool model accuracy:  62.19 %
+
+
+augment model training:
+Epoch 1/13
+4688/4688 - 150s - loss: 1.3613 - accuracy: 0.5222 - 150s/epoch - 32ms/step
+Epoch 2/13
+4688/4688 - 150s - loss: 0.9331 - accuracy: 0.6806 - 150s/epoch - 32ms/step
+Epoch 3/13
+4688/4688 - 150s - loss: 0.7636 - accuracy: 0.7391 - 150s/epoch - 32ms/step
+Epoch 4/13
+4688/4688 - 150s - loss: 0.6463 - accuracy: 0.7791 - 150s/epoch - 32ms/step
+Epoch 5/13
+4688/4688 - 150s - loss: 0.5556 - accuracy: 0.8093 - 150s/epoch - 32ms/step
+Epoch 6/13
+4688/4688 - 150s - loss: 0.4876 - accuracy: 0.8320 - 150s/epoch - 32ms/step
+Epoch 7/13
+4688/4688 - 151s - loss: 0.4332 - accuracy: 0.8497 - 151s/epoch - 32ms/step
+Epoch 8/13
+4688/4688 - 151s - loss: 0.3897 - accuracy: 0.8648 - 151s/epoch - 32ms/step
+Epoch 9/13
+4688/4688 - 150s - loss: 0.3541 - accuracy: 0.8782 - 150s/epoch - 32ms/step
+Epoch 10/13
+4688/4688 - 151s - loss: 0.3270 - accuracy: 0.8869 - 151s/epoch - 32ms/step
+Epoch 11/13
+4688/4688 - 151s - loss: 0.3037 - accuracy: 0.8947 - 151s/epoch - 32ms/step
+Epoch 12/13
+4688/4688 - 151s - loss: 0.2828 - accuracy: 0.9026 - 151s/epoch - 32ms/step
+Epoch 13/13
+4688/4688 - 151s - loss: 0.2663 - accuracy: 0.9088 - 151s/epoch - 32ms/step
+
+
+Test data set augment model evaluation:
+313/313 - 4s - 4s/epoch - 14ms/step
+Test data set augment model accuracy:  80.81 %
+
+
+Perturbed data set augment model evaluation:
+313/313 - 4s - 4s/epoch - 14ms/step
+Perturbed data set augment model accuracy:  79.09 %
