@@ -4,12 +4,11 @@
 # Date: 21. 12. 2022
 # ========================================================
 
-###################################### How to run the script and reproduce results from the report ######################################
+###################################### How to run the script and reproduce results from the report ########################################
 # 1, Runing the script simply as `python assigment3_mihola.py` will train all the discussed models in the report and evaluate all 
-#    the necessary ones. Although having fixed all possibke random seeds, this execution of the script will not give the exact results 
-#    listed in the report.
-# 2, To get the same results as in the report, each group of models or a single model must be run separately. This can be done by
-#    supplying command line arguments to the script when executing it. The command line arguments are separated into 3 types:
+#    the necessary ones. The results should match the results written in the report.
+# 2, Each group of models or a single model can be also run separately. This can be done by supplying command line arguments to the 
+#    script when executing it. The command line arguments are separated into 3 types:
 #      * section of the report with possible values - 'baseline' for the 1st section, 'regularization' or 'reg' fro the second section,
 #                                                     'final' for the  3rd and 4th section and 'plot' to plot the inspection of the 
 #                                                     perturbed data set,
@@ -17,18 +16,18 @@
 #                          the selected models, 'val_train' to train the final model with validation dat set, 'val_eval' to 
 #                          evaluate the final model trained with validation data set, 'all' to perform all listed modes,
 #      * model or group of models - 'final' the final model, 'avg_pool' the modified final model with average pooling layers,
-#                                    'l2_bn' the modified final model with l2 regularization in convolutional layers and with dropout 
-#                                    replaced by l2 regularization, 'l2_bn_dropout' modified final model with l2 regularization in 
-#                                    convolutional and fully connected layers and with 0.25 dropout, 'augment' the final model trained on
-#                                    the augmented training data set, 'batch_norm' the Darknet-53 inspired models only with batch
-#                                    normalization layers, 'dropout_03' the models with dropout rate 0.3, 'dropout_04' the models with 
-#                                    dropout rate 0.4, 'dropout_05' the models with dropout rate 0.5, 'l1_00001' the models with l1
-#                                    regularization of 0.0001, 'l1_0001' the models with l1 regularization of 0.001, 'l1_001' the models 
-#                                    with l1 regularization of 0.01, 'l2_00001' the models with l2 regularization of 0.0001, 'l2_0001' 
-#                                    the models with l2 regularization of 0.001, 'l2_001' the models with l2 regularization of 0.01,
-#                                    'l1l2_00001' the models with l1 and l2 regularization of 0.0001, 'l1l2_0001' the models with l1 and 
-#                                    l2 regularization of 0.001, 'l1l2_001' the models with l1 and l2 regularization of 0.01.
-#    The script is expected to be called `python assigment3_mihola.py [section of the report] [mode of runing] [model/models]`.
+#                                   'l2_bn' the modified final model with l2 regularization in convolutional layers and with dropout 
+#                                   replaced by l2 regularization, 'l2_bn_dropout' modified final model with l2 regularization in 
+#                                   convolutional and fully connected layers and with 0.25 dropout, 'augment' the final model trained on
+#                                   the augmented training data set, 'batch_norm' the Darknet-53 inspired models only with batch
+#                                   normalization layers, 'dropout_03' the models with dropout rate 0.3, 'dropout_04' the models with 
+#                                   dropout rate 0.4, 'dropout_05' the models with dropout rate 0.5, 'l1_00001' the models with l1
+#                                   regularization of 0.0001, 'l1_0001' the models with l1 regularization of 0.001, 'l1_001' the models 
+#                                   with l1 regularization of 0.01, 'l2_00001' the models with l2 regularization of 0.0001, 'l2_0001' 
+#                                   the models with l2 regularization of 0.001, 'l2_001' the models with l2 regularization of 0.01,
+#                                   'l1l2_00001' the models with l1 and l2 regularization of 0.0001, 'l1l2_0001' the models with l1 and 
+#                                   l2 regularization of 0.001, 'l1l2_001' the models with l1 and l2 regularization of 0.01.
+#    The script is expected to be called `python assigment3_mihola.py [section of the report] [mode of runing] [model/models]*`.
 #    Examples:
 #      * `python assigment3_mihola.py baseline train` to obtain the results for the Table 1 in the report,
 #      * `python assigment3_mihola.py reg train batch_norm dropout_03 dropout_04 dropout_05 l1_001 l1_0001 l1_00001` to obtain the 
@@ -36,8 +35,9 @@
 #      * `python assigment3_mihola.py reg train l2_001 l2_0001 l2_00001 l1l2_001 l1l2_0001 l1l2_00001` to obtain the results for the 
 #         Table 3 in the report,
 #      * `python assigment3_mihola.py final all final` to obtain the Figure 1 and Figure 2 in the report,
-#      * `python assigment3_mihola.py final all` to obtain the results for Table 5 in the report.
-#########################################################################################################################################
+#      * `python assigment3_mihola.py final all all` to obtain the results for Table 5 in the report.
+#      * `python assigment3_mihola.py plot` to plot my salt and pepper and gaussian augmentation in comparrison to the perturbed data set.
+###########################################################################################################################################
 
 import tensorflow.keras.datasets as tfd
 import tensorflow.keras.utils as tfu
@@ -46,6 +46,7 @@ import tensorflow.keras.layers as tfl
 import tensorflow.keras.callbacks as tfc
 import tensorflow.keras.regularizers as tfr
 import tensorflow.keras.initializers as tfi
+import tensorflow_addons as tfa
 import sklearn.metrics as skm
 import tensorflow as tf
 import numpy as np
@@ -58,10 +59,7 @@ import sys
 
 RANDOM_SEED = 1
 
-class Models():
-    def __init__(self):
-        pass
-    
+class Models():  
     def assign_models(self):
         # ====================================================== baseline ======================================================
         self.FC_SP_16_256 = tfm.Sequential([
@@ -1972,7 +1970,7 @@ def augmentation_plot(x_test, x_perturb):
         figure, axis = plt.subplots(3, 3)
         figure.set_size_inches(14, 9)
 
-        contrast_image = np.asarray(pil.ImageEnhance.Brightness(pil.Image.fromarray(test_image, mode="RGB")).enhance(1.15)) / 255
+        contrast_image = np.asarray(pil.ImageEnhance.Contrast(pil.ImageEnhance.Brightness(pil.Image.fromarray(test_image, mode="RGB")).enhance(1.15)).enhance(1.1)) / 255
         test_image = test_image / 255
         perturb_image = perturb_image / 255
         salt_and_pepper_image = sku.random_noise(test_image, mode="s&p", amount=0.0175)
@@ -1989,7 +1987,7 @@ def augmentation_plot(x_test, x_perturb):
         axis[0, 1].set_title("Perturbed image")
 
         axis[0, 2].imshow(perturb_test_difference)
-        axis[0, 2].set_title(f"Difference between perturbed and test image (mean: {np.mean(perturb_test_difference):.2E})")
+        axis[0, 2].set_title(f"Difference between perturbed and test image")
 
         axis[1, 0].imshow(salt_and_pepper_image)
         axis[1, 0].set_title("Test image with salt and pepper noise")
@@ -1998,7 +1996,7 @@ def augmentation_plot(x_test, x_perturb):
         axis[1, 1].set_title("Test image with gaussian noise")
 
         axis[1, 2].imshow(contrast_image)
-        axis[1, 2].set_title("Test image with decreased contrast")
+        axis[1, 2].set_title("Test image with increased brightness and contrast")
 
         axis[2, 0].imshow(salt_and_pepper_difference)
         axis[2, 0].set_title("Difference salt and peper")
@@ -2011,7 +2009,9 @@ def augmentation_plot(x_test, x_perturb):
         
         plt.show()
 
-def augment_data_set(x_dataset, y_dataset):
+def salt_and_pepper_and_gaussian_augment(x_dataset, y_dataset):
+    np.random.seed(RANDOM_SEED)
+
     x_salt_pepper_set = np.zeros_like(x_dataset)
     x_gaussian_set = np.zeros_like(x_dataset)
 
@@ -2032,24 +2032,59 @@ def augment_data_set(x_dataset, y_dataset):
     shuffel = np.random.choice(y_concat.shape[0], y_concat.shape[0], replace=False)
     return x_concat[shuffel], y_concat[shuffel]
 
+def rotation_and_colors_augment(x_dataset, y_dataset):
+    np.random.seed(RANDOM_SEED)
+
+    x_rotation_set = np.zeros_like(x_dataset)
+    x_colors_set = np.zeros_like(x_dataset)
+
+    y_rotation_set = np.zeros_like(y_dataset)
+    y_colors_set = np.zeros_like(y_dataset)
+
+    for i, image in enumerate(x_dataset):
+        image = image.numpy()
+
+        x_rotation_set[i] = tfa.image.rotate(image, (np.random.randn() + 1) * np.pi / 6) # randomly rotate at maximum by 30 degrees
+        x_colors_set[i] = np.asarray(
+                              pil.ImageEnhance.Contrast(
+                                  pil.ImageEnhance.Brightness(
+                                      pil.Image.fromarray(image.reshape(32, 32), mode="L")
+                                  )
+                                  .enhance(1.15)
+                              )
+                              .enhance(1.1)
+                          ).reshape(32, 32, 1) / 255
+
+        y_rotation_set[i] = y_dataset[i]
+        y_colors_set[i] = y_dataset[i]
+
+    x_concat = np.concatenate((x_dataset, x_rotation_set, x_colors_set), 0)
+    y_concat = np.concatenate((y_dataset, y_rotation_set, y_colors_set), 0)
+    shuffel = np.random.choice(y_concat.shape[0], y_concat.shape[0], replace=False)
+    return x_concat[shuffel], y_concat[shuffel]
+
 def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, epochs=16):
     final_model = None
     l2_bn_model = None
     l2_bn_dropout_model = None
     avg_pool_model = None
-    augment_model = None
+    augment_spg_model = None
+    augment_rc_model = None
     
     if "all" in models_to_run:
         final_model = FinalModel()
         l2_bn_model = FinalModel("l2_bn")
         l2_bn_dropout_model = FinalModel("l2_bn_dropout")
         avg_pool_model = FinalModel("avg_pool")
-        augment_model = FinalModel("augment")
+        augment_spg_model = FinalModel("augment_spg")
+        augment_rc_model = FinalModel("augment_rc")
     else:
         if "final" in models_to_run:
             final_model = FinalModel()
-        if "augment" in models_to_run:
-            augment_model = FinalModel("augment")
+        if "augment_spg" in models_to_run:
+            augment_spg_model = FinalModel("augment_spg")
+        if "augment_rc" in models_to_run:
+            augment_rc_model = FinalModel("augment_rc")
         if "l2_bn" in models_to_run:
             l2_bn_model = FinalModel("l2_bn")
         if "l2_bn_dropout" in models_to_run:
@@ -2080,12 +2115,21 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
             avg_pool_model.evaluate(x_test, y_test)
             avg_pool_model.evaluate(x_perturb, y_perturb, "Perturbed")
         
-        if augment_model:
-            x_train, y_train = augment_data_set(x_train, y_train)
+        if augment_spg_model:
+            x_train_augmented, y_train_augmented = salt_and_pepper_and_gaussian_augment(x_train, y_train)
 
-            augment_model.train(x_train, y_train, epochs)
-            augment_model.evaluate(x_test, y_test)
-            augment_model.evaluate(x_perturb, y_perturb, "Perturbed")
+            augment_spg_model.train(x_train_augmented, y_train_augmented, epochs)
+            augment_spg_model.evaluate(x_test, y_test)
+            augment_spg_model.evaluate(x_perturb, y_perturb, "Perturbed")
+            del x_train_augmented, y_train_augmented
+        
+        if augment_rc_model:
+            x_train_augmented, y_train_augmented = rotation_and_colors_augment(x_train, y_train)
+
+            augment_rc_model.train(x_train_augmented, y_train_augmented, epochs)
+            augment_rc_model.evaluate(x_test, y_test)
+            augment_rc_model.evaluate(x_perturb, y_perturb, "Perturbed")
+            del x_train_augmented, y_train_augmented
 
     elif mode == "train":
         if final_model:
@@ -2100,10 +2144,15 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
         if avg_pool_model:
             avg_pool_model.train(x_train, y_train, epochs)
         
-        if augment_model:
-            x_train, y_train = augment_data_set(x_train, y_train)
+        if augment_spg_model:
+            x_train_augmented, y_train_augmented = salt_and_pepper_and_gaussian_augment(x_train, y_train)
 
-            augment_model.train(x_train, y_train, epochs)
+            augment_spg_model.train(x_train_augmented, y_train_augmented, epochs)
+        
+        if augment_rc_model:
+            x_train_augmented, y_train_augmented = rotation_and_colors_augment(x_train, y_train)
+
+            augment_rc_model.train(x_train_augmented, y_train_augmented, epochs)
 
     elif mode == "val_train":
         if final_model:
@@ -2126,11 +2175,13 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
             avg_pool_model.evaluate(x_test, y_test)
             avg_pool_model.evaluate(x_perturb, y_perturb, "Perturbed")
         
-        if augment_model:
-            x_train, y_train = augment_data_set(x_train, y_train)
-
-            augment_model.evaluate(x_test, y_test)
-            augment_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        if augment_spg_model:
+            augment_spg_model.evaluate(x_test, y_test)
+            augment_spg_model.evaluate(x_perturb, y_perturb, "Perturbed")
+        
+        if augment_rc_model:
+            augment_rc_model.evaluate(x_test, y_test)
+            augment_rc_model.evaluate(x_perturb, y_perturb, "Perturbed")
 
     elif mode == "val_eval":
         if final_model:
