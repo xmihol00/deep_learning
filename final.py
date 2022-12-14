@@ -1953,7 +1953,7 @@ class FinalModel():
                                                                                                          "ship", 
                                                                                                          "truck"])
         axis = plt.subplots(figsize=(12, 12))[1]
-        plt.title(f"{dataset.lower()} data set confusion matrix")
+        plt.title(f"{dataset} data set confusion matrix")
         confusion_matrix.plot(cmap="Blues", ax=axis)
         plt.savefig(f"{self.model_type}_{dataset.lower()}_confusion_matrix.png")
         plt.close()
