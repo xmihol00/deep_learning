@@ -2053,7 +2053,7 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
         if "l2_bn" in models_to_run:
             l2_bn_model = FinalModel("l2_bn")
         if "l2_bn_dropout" in models_to_run:
-            l2_bn_model = FinalModel("l2_bn_dropout")
+            l2_bn_dropout_model = FinalModel("l2_bn_dropout")
         if "avg_pool" in models_to_run:
             avg_pool_model = FinalModel("avg_pool")
     
@@ -2214,5 +2214,5 @@ if __name__ == "__main__":
         models.run(mode, models_to_run, x_train, y_train)
     
     if final:
-        EPOCHS = 13 # number of epochs discovered as the best when training with early stopping
+        EPOCHS = 15 # number of epochs discovered as the best when training with early stopping
         run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, EPOCHS)

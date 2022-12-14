@@ -1,0 +1,86 @@
+
+
+l2_bn model training:
+Epoch 1/15
+1563/1563 - 49s - loss: 1.3191 - accuracy: 0.5738 - 49s/epoch - 31ms/step
+Epoch 2/15
+1563/1563 - 50s - loss: 0.9152 - accuracy: 0.7237 - 50s/epoch - 32ms/step
+Epoch 3/15
+1563/1563 - 50s - loss: 0.8052 - accuracy: 0.7731 - 50s/epoch - 32ms/step
+Epoch 4/15
+1563/1563 - 50s - loss: 0.7464 - accuracy: 0.8084 - 50s/epoch - 32ms/step
+Epoch 5/15
+1563/1563 - 51s - loss: 0.6950 - accuracy: 0.8411 - 51s/epoch - 32ms/step
+Epoch 6/15
+1563/1563 - 51s - loss: 0.6630 - accuracy: 0.8608 - 51s/epoch - 32ms/step
+Epoch 7/15
+1563/1563 - 51s - loss: 0.6248 - accuracy: 0.8827 - 51s/epoch - 33ms/step
+Epoch 8/15
+1563/1563 - 51s - loss: 0.6014 - accuracy: 0.8995 - 51s/epoch - 33ms/step
+Epoch 9/15
+1563/1563 - 51s - loss: 0.5916 - accuracy: 0.9103 - 51s/epoch - 33ms/step
+Epoch 10/15
+1563/1563 - 51s - loss: 0.5786 - accuracy: 0.9195 - 51s/epoch - 33ms/step
+Epoch 11/15
+1563/1563 - 51s - loss: 0.5702 - accuracy: 0.9250 - 51s/epoch - 33ms/step
+Epoch 12/15
+1563/1563 - 51s - loss: 0.5769 - accuracy: 0.9264 - 51s/epoch - 33ms/step
+Epoch 13/15
+1563/1563 - 51s - loss: 0.5691 - accuracy: 0.9332 - 51s/epoch - 33ms/step
+Epoch 14/15
+1563/1563 - 51s - loss: 0.5568 - accuracy: 0.9397 - 51s/epoch - 33ms/step
+Epoch 15/15
+1563/1563 - 51s - loss: 0.5703 - accuracy: 0.9353 - 51s/epoch - 33ms/step
+
+
+Test data set l2_bn model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Test data set l2_bn model accuracy:  77.69 %
+
+
+Perturbed data set l2_bn model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Perturbed data set l2_bn model accuracy:  63.50 %
+
+
+l2_bn_dropout model training:
+Epoch 1/15
+1563/1563 - 53s - loss: 1.4543 - accuracy: 0.5335 - 53s/epoch - 34ms/step
+Epoch 2/15
+1563/1563 - 52s - loss: 0.9952 - accuracy: 0.6973 - 52s/epoch - 33ms/step
+Epoch 3/15
+1563/1563 - 52s - loss: 0.8863 - accuracy: 0.7470 - 52s/epoch - 33ms/step
+Epoch 4/15
+1563/1563 - 52s - loss: 0.8424 - accuracy: 0.7774 - 52s/epoch - 33ms/step
+Epoch 5/15
+1563/1563 - 52s - loss: 0.8117 - accuracy: 0.8006 - 52s/epoch - 33ms/step
+Epoch 6/15
+1563/1563 - 52s - loss: 0.7796 - accuracy: 0.8226 - 52s/epoch - 33ms/step
+Epoch 7/15
+1563/1563 - 52s - loss: 0.7518 - accuracy: 0.8409 - 52s/epoch - 33ms/step
+Epoch 8/15
+1563/1563 - 52s - loss: 0.7335 - accuracy: 0.8507 - 52s/epoch - 33ms/step
+Epoch 9/15
+1563/1563 - 53s - loss: 0.7215 - accuracy: 0.8627 - 53s/epoch - 34ms/step
+Epoch 10/15
+1563/1563 - 52s - loss: 0.7079 - accuracy: 0.8733 - 52s/epoch - 34ms/step
+Epoch 11/15
+1563/1563 - 52s - loss: 0.6963 - accuracy: 0.8805 - 52s/epoch - 33ms/step
+Epoch 12/15
+1563/1563 - 52s - loss: 0.6925 - accuracy: 0.8849 - 52s/epoch - 33ms/step
+Epoch 13/15
+1563/1563 - 52s - loss: 0.6771 - accuracy: 0.8941 - 52s/epoch - 33ms/step
+Epoch 14/15
+1563/1563 - 52s - loss: 0.6838 - accuracy: 0.8961 - 52s/epoch - 33ms/step
+Epoch 15/15
+1563/1563 - 52s - loss: 0.6785 - accuracy: 0.9004 - 52s/epoch - 33ms/step
+
+
+Test data set l2_bn_dropout model evaluation:
+313/313 - 4s - 4s/epoch - 14ms/step
+Test data set l2_bn_dropout model accuracy:  80.46 %
+
+
+Perturbed data set l2_bn_dropout model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Perturbed data set l2_bn_dropout model accuracy:  61.64 %
