@@ -2042,6 +2042,7 @@ def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_pe
     if "all" in models_to_run:
         final_model = FinalModel()
         l2_bn_model = FinalModel("l2_bn")
+        l2_bn_dropout_model = FinalModel("l2_bn_dropout")
         avg_pool_model = FinalModel("avg_pool")
         augment_model = FinalModel("augment")
     else:
