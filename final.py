@@ -2044,7 +2044,7 @@ def rotation_and_colors_augment(x_dataset, y_dataset):
     for i, image in enumerate(x_dataset):
         image = image.numpy()
 
-        x_rotation_set[i] = tfa.image.rotate(image, (np.random.randn() + 1) * np.pi / 6) # randomly rotate at maximum by 30 degrees
+        x_rotation_set[i] = tfa.image.rotate(image, (np.random.rand() * 2 - 1) * np.pi / 9) # randomly rotate at maximum by 20 degrees
         x_colors_set[i] = np.asarray(
                               pil.ImageEnhance.Contrast(
                                   pil.ImageEnhance.Brightness(
@@ -2062,6 +2062,13 @@ def rotation_and_colors_augment(x_dataset, y_dataset):
     y_concat = np.concatenate((y_dataset, y_rotation_set, y_colors_set), 0)
     shuffel = np.random.choice(y_concat.shape[0], y_concat.shape[0], replace=False)
     return x_concat[shuffel], y_concat[shuffel]
+
+def plot_rotation(x_dataset):
+    for image in x_dataset:
+        _, axis = plt.subplots(2, 1)
+        axis[0].imshow(image.numpy(), cmap="gray")
+        axis[1].imshow(tfa.image.rotate(image, (np.random.rand() * 2 - 1) * np.pi / 9).numpy(), cmap="gray")
+        plt.show()
 
 def run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, epochs=16):
     final_model = None
@@ -2243,8 +2250,6 @@ if __name__ == "__main__":
     x_perturb = np.mean(x_perturb_RGB, axis=3) # convert to grayscale
     x_perturb = x_perturb / 255 # normalize to pixel values between 0 and 1
     x_perturb = np.expand_dims(x_perturb, -1) # adding chanel dimension
-
-    #x_train, y_train = x_train[:320], y_train[0:320]
 
     if plot:
         augmentation_plot(x_test_RGB, x_perturb_RGB)
