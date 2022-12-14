@@ -2270,5 +2270,5 @@ if __name__ == "__main__":
         models.run(mode, models_to_run, x_train, y_train)
     
     if final:
-        EPOCHS = 15 # number of epochs discovered as the best when training with early stopping
+        EPOCHS = 13 # number of epochs discovered as the best when training with early stopping
         run_final_models(mode, models_to_run, x_train, y_train, x_test, y_test, x_perturb, y_perturb, EPOCHS)
