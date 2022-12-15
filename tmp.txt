@@ -1,0 +1,78 @@
+
+
+l2_bn model training:
+Epoch 1/13
+1563/1563 - 49s - loss: 1.3191 - accuracy: 0.5738 - 49s/epoch - 31ms/step
+Epoch 2/13
+1563/1563 - 50s - loss: 0.9152 - accuracy: 0.7237 - 50s/epoch - 32ms/step
+Epoch 3/13
+1563/1563 - 51s - loss: 0.8052 - accuracy: 0.7731 - 51s/epoch - 32ms/step
+Epoch 4/13
+1563/1563 - 51s - loss: 0.7464 - accuracy: 0.8084 - 51s/epoch - 32ms/step
+Epoch 5/13
+1563/1563 - 51s - loss: 0.6950 - accuracy: 0.8411 - 51s/epoch - 33ms/step
+Epoch 6/13
+1563/1563 - 51s - loss: 0.6630 - accuracy: 0.8608 - 51s/epoch - 33ms/step
+Epoch 7/13
+1563/1563 - 52s - loss: 0.6248 - accuracy: 0.8827 - 52s/epoch - 33ms/step
+Epoch 8/13
+1563/1563 - 52s - loss: 0.6014 - accuracy: 0.8995 - 52s/epoch - 33ms/step
+Epoch 9/13
+1563/1563 - 52s - loss: 0.5916 - accuracy: 0.9103 - 52s/epoch - 33ms/step
+Epoch 10/13
+1563/1563 - 52s - loss: 0.5786 - accuracy: 0.9195 - 52s/epoch - 33ms/step
+Epoch 11/13
+1563/1563 - 52s - loss: 0.5702 - accuracy: 0.9250 - 52s/epoch - 33ms/step
+Epoch 12/13
+1563/1563 - 52s - loss: 0.5769 - accuracy: 0.9264 - 52s/epoch - 33ms/step
+Epoch 13/13
+1563/1563 - 52s - loss: 0.5691 - accuracy: 0.9332 - 52s/epoch - 33ms/step
+
+
+Test data set l2_bn model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Test data set l2_bn model accuracy:  79.67 %
+
+
+Perturbed data set l2_bn model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Perturbed data set l2_bn model accuracy:  62.14 %
+
+
+augment_spg model training:
+Epoch 1/13
+4688/4688 - 155s - loss: 1.3730 - accuracy: 0.5195 - 155s/epoch - 33ms/step
+Epoch 2/13
+4688/4688 - 160s - loss: 0.9461 - accuracy: 0.6772 - 160s/epoch - 34ms/step
+Epoch 3/13
+4688/4688 - 159s - loss: 0.7807 - accuracy: 0.7339 - 159s/epoch - 34ms/step
+Epoch 4/13
+4688/4688 - 157s - loss: 0.6607 - accuracy: 0.7753 - 157s/epoch - 34ms/step
+Epoch 5/13
+4688/4688 - 156s - loss: 0.5732 - accuracy: 0.8029 - 156s/epoch - 33ms/step
+Epoch 6/13
+4688/4688 - 155s - loss: 0.4999 - accuracy: 0.8274 - 155s/epoch - 33ms/step
+Epoch 7/13
+4688/4688 - 155s - loss: 0.4462 - accuracy: 0.8467 - 155s/epoch - 33ms/step
+Epoch 8/13
+4688/4688 - 155s - loss: 0.4018 - accuracy: 0.8610 - 155s/epoch - 33ms/step
+Epoch 9/13
+4688/4688 - 155s - loss: 0.3639 - accuracy: 0.8749 - 155s/epoch - 33ms/step
+Epoch 10/13
+4688/4688 - 155s - loss: 0.3385 - accuracy: 0.8835 - 155s/epoch - 33ms/step
+Epoch 11/13
+4688/4688 - 155s - loss: 0.3110 - accuracy: 0.8923 - 155s/epoch - 33ms/step
+Epoch 12/13
+4688/4688 - 156s - loss: 0.2891 - accuracy: 0.9008 - 156s/epoch - 33ms/step
+Epoch 13/13
+4688/4688 - 156s - loss: 0.2710 - accuracy: 0.9068 - 156s/epoch - 33ms/step
+
+
+Test data set augment_spg model evaluation:
+313/313 - 4s - 4s/epoch - 14ms/step
+Test data set augment_spg model accuracy:  80.50 %
+
+
+Perturbed data set augment_spg model evaluation:
+313/313 - 4s - 4s/epoch - 13ms/step
+Perturbed data set augment_spg model accuracy:  78.41 %
