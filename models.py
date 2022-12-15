@@ -1190,23 +1190,31 @@ VGG_3B_32_128_l1l2_001 = tfm.Sequential([
     tfl.Dense(10, activation="softmax")
 ])
 
-FC_SP_16_256.build([32, 32, 32, 1])
-FC_SP_16_256.summary()
+import tensorflow.keras.initializers as tfi
+RANDOM_SEED = 1
 
-FC_MP_16_256.build([32, 32, 32, 1])
-FC_MP_16_256.summary()
+model = tfm.Sequential([
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=32, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=64, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.Conv2D(filters=128, kernel_size=(3, 3), activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED), padding="same"),
+                tfl.BatchNormalization(),
+                tfl.MaxPool2D(),
+                tfl.Flatten(),
+                tfl.Dropout(0.4),
+                tfl.Dense(256, activation="relu", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED)),
+                tfl.Dropout(0.4),
+                tfl.Dense(10, activation="softmax", kernel_initializer=tfi.GlorotNormal(RANDOM_SEED))
+            ])
 
-FC_MP_32_512.build([32, 32, 32, 1])
-FC_MP_32_512.summary()
-
-VGG_2B_32_64.build([32, 32, 32, 1])
-VGG_2B_32_64.summary()
-
-VGG_3B_16_64.build([32, 32, 32, 1])
-VGG_3B_16_64.summary()
-
-VGG_3B_32_128.build([32, 32, 32, 1])
-VGG_3B_32_128.summary()
-
-VGG_3B_32_128_dropout_05.build([64, 32, 32, 1])
-VGG_3B_32_128_dropout_05.summary()
+model.build([None, 32, 32, 1])
+model.summary()
